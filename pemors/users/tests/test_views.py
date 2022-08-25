@@ -11,11 +11,7 @@ from django.urls import reverse
 from pemors.users.forms import UserAdminChangeForm
 from pemors.users.models import User
 from pemors.users.tests.factories import UserFactory
-from pemors.users.views import (
-    UserRedirectView,
-    UserUpdateView,
-    user_detail_view,
-)
+from pemors.users.views import UserRedirectView, UserUpdateView, user_detail_view
 
 pytestmark = pytest.mark.django_db
 
