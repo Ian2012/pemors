@@ -6,3 +6,12 @@ run:
 
 migrate:
 	docker-compose -f local.yml run --rm django python manage.py migrate
+
+makemigrations:
+	docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+createsuperuser:
+	docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+train:
+	docker-compose -f local.yml run --rm django python manage.py train

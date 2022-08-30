@@ -4,13 +4,13 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from pemors.users.forms import UserAdminChangeForm, UserAdminCreationForm
+from pemors.users.models import Profile, Status
 
 User = get_user_model()
 
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
     fieldsets = (
@@ -32,3 +32,15 @@ class UserAdmin(auth_admin.UserAdmin):
     )
     list_display = ["username", "name", "is_superuser"]
     search_fields = ["name"]
+
+
+@admin.register(Status)
+class StatusAdmin(admin.ModelAdmin):
+    list_display = ["value", "user"]
+    search_fields = ["value"]
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ["user", "agr", "con", "ext", "neu", "opn"]
+    search_fields = ["user"]

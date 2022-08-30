@@ -23,6 +23,26 @@ services:
       - "8000:8000"
     command: /start
 
+  tailwind:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: pemors_local_django
+    container_name: pemors_local_tailwind
+    platform: linux/x86_64
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    command: bash -c "npm run dev"
+    working_dir: /app/theme/static_src
+    # Without tty, no stdin, and tailwind watcher aborts
+    # https://github.com/tailwindlabs/tailwindcss/issues/5324
+    tty: true
+
   postgres:
     build:
       context: .
@@ -34,20 +54,3 @@ services:
       - pemors_local_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
-
-  docs:
-    image: pemors_local_docs
-    container_name: pemors_local_docs
-    platform: linux/x86_64
-    build:
-      context: .
-      dockerfile: ./compose/local/docs/Dockerfile
-    env_file:
-      - ./.envs/.local/.django
-    volumes:
-      - ./docs:/docs:z
-      - ./config:/app/config:z
-      - ./pemors:/app/pemors:z
-    ports:
-      - "9000:9000"
-    command: /start-docs

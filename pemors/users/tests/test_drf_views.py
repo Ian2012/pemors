@@ -1,7 +1,10 @@
+import pytest
 from django.test import RequestFactory
 
 from pemors.users.api.views import UserViewSet
 from pemors.users.models import User
+
+pytestmark = pytest.mark.django_db
 
 
 class TestUserViewSet:

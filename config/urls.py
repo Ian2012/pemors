@@ -3,22 +3,22 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from pemors.core.views import about_view, home_view
+
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
-    # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path("users/", include("pemors.users.urls", namespace="users")),
+    path("__reload__/", include("django_browser_reload.urls")),
+    path("", home_view, name="home"),
+    path("about/", about_view, name="about"),
     path("accounts/", include("allauth.urls")),
-    # Your stuff: custom urls includes go here
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("users/", include("pemors.users.urls", namespace="users")),
+    path("titles/", include("pemors.titles.urls", namespace="titles")),
+    path("api/titles/", include("pemors.titles.api.urls", namespace="titles_api")),
+]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
 urlpatterns += [

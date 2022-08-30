@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+  <form id="personality_form" method="post" action="{% url 'users:personality' %}">
+    {{ form.errors }}
+    {% csrf_token %}
+    <span>{% trans 'How much do you agree with' %}</span>
+    <div>
+      <span class="number">1</span>
+      <span class="number">2</span>
+      <span class="number">3</span>
+      <span class="number">4</span>
+      <span class="number">5</span>
+    </div>
+    {{ form }}
+    <div class="">
+      <div class="">
+        <button type="submit" class="">Update</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

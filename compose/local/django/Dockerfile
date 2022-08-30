@@ -60,10 +60,16 @@ RUN chmod +x /entrypoint
 COPY ./compose/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
-run export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
+# Install node js
+USER root
+RUN apt-get update && apt-get -y install curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_16.x  | bash -
+RUN apt-get -y install nodejs
 
 # copy application code to WORKDIR
 COPY . ${APP_HOME}
+
+RUN cd theme/static_src && npm install
 
 ENTRYPOINT ["/entrypoint"]
