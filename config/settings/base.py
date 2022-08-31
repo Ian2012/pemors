@@ -137,7 +137,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "pemors.users.middleware.check_userprofile_middleware",
+    "pemors.users.middleware.CheckUserProfileMiddleware",
 ]
 
 # STATIC

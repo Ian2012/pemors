@@ -14,6 +14,7 @@ from pemors.titles.models import (
     Rating,
     Title,
     TitleGenre,
+    UserRating,
 )
 
 csv.field_size_limit(sys.maxsize)
@@ -28,13 +29,13 @@ class Preprocesor:
         self.stdout = stdout
 
     @transaction.atomic
-    def process(self):
+    def process(self, delimiter):
         self.rename()
         with open(f"downloads/{self.file_name}") as file:
             self.stdout.write("\tLoading file in memory...")
             data = file.readlines()
             n = len(data)
-            reader = csv.DictReader(data, delimiter="\t")
+            reader = csv.DictReader(data, delimiter=delimiter)
 
             if self.is_bulk:
                 self.process_in_bulk(reader, n)
@@ -315,3 +316,43 @@ class CrewPreprocessor(Preprocesor):
         return titles.get(data["title_id"], False) and people.get(
             data["person_id"], False
         )
+
+
+class UserRatingPreprocessor(Preprocesor):
+    def rename(self):
+        self.stdout.write("\tRenaming columns...")
+
+        subprocess.check_call(
+            f' sed -i "1i user_id::title_id::rating::rating_timestamp" downloads/{self.file_name}',
+            shell=True,
+        )
+
+    def process_in_bulk(self, reader, n):
+        user_ratings = []
+        self.stdout.write("\tFetching movies...")
+        titles = {title.id: title for title in Title.objects.all()}
+
+        for data in tqdm(reader, total=n):
+            if not self.validate(data, titles):
+                continue
+            user_rating = UserRating(**data)
+            user_ratings.append(user_rating)
+
+            if len(user_ratings) > BATCH_SIZE:
+                UserRating.objects.bulk_create(user_ratings)
+                user_ratings = []
+
+        UserRating.objects.bulk_create(user_ratings)
+
+    def process_no_bulk(self, file_id, reader):
+        return NotImplementedError
+
+    def validate(self, data, titles):
+        data.pop("")
+        data.pop("user_id")
+        data.pop("rating_timestamp")
+        if not titles.get(f"tt{data['title_id']}", False):
+            return False
+        else:
+            data["title_id"] = f"tt{data['title_id']}"
+            return True

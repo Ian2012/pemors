@@ -78,7 +78,9 @@ class Crew(models.Model):
 
 
 class UserRating(models.Model):
-    user = models.ForeignKey(to=User, related_name="ratings", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=User, related_name="ratings", on_delete=models.CASCADE, null=True
+    )
     title = models.ForeignKey(
         to=Title, related_name="ratings", on_delete=models.CASCADE
     )
