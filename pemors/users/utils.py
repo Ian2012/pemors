@@ -6,7 +6,7 @@ predictor = Predictor()
 
 def predict_personality_for_user(user):
     if not user.statuses.all():
-        get_user_tweets()
+        get_user_tweets(user)
 
     predictions = predictor.predict_personality(statuses=user.statuses.all())
     total = {trait: 0 for trait in TRAITS}

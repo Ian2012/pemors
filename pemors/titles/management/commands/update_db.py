@@ -69,28 +69,28 @@ class Command(BaseCommand):
     def process_title_basics(self, file_id, is_bulk):
         TitlePreprocessor(
             file_name=self.file_names[file_id], is_bulk=is_bulk, stdout=self.stdout
-        ).process()
+        ).process(delimiter="\t")
 
     @transaction.atomic
     def process_title_ratings(self, file_id, is_bulk):
         RatingPreprocessor(
             file_name=self.file_names[file_id], is_bulk=is_bulk, stdout=self.stdout
-        ).process()
+        ).process(delimiter="\t")
 
     @transaction.atomic
     def process_title_akas(self, file_id, is_bulk):
         AkaPreprocessor(
             file_name=self.file_names[file_id], is_bulk=is_bulk, stdout=self.stdout
-        ).process()
+        ).process(delimiter="\t")
 
     @transaction.atomic
     def process_name_basics(self, file_id, is_bulk):
         PersonPreprocessor(
             file_name=self.file_names[file_id], is_bulk=is_bulk, stdout=self.stdout
-        ).process()
+        ).process(delimiter="\t")
 
     @transaction.atomic
     def process_title_crew(self, file_id, is_bulk):
         CrewPreprocessor(
             file_name=self.file_names[file_id], is_bulk=is_bulk, stdout=self.stdout
-        ).process()
+        ).process(delimiter="\t")
