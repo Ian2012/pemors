@@ -28,4 +28,4 @@ drf-spectacular==0.23.1  # https://github.com/tfranzel/drf-spectacular
 # ML
 scikit-learn==1.1.1
 matplotlib==3.5.2
-pandas==1.4.2
+pandas==1.4.4
