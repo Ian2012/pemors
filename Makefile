@@ -16,8 +16,16 @@ createsuperuser:
 train:
 	docker-compose -f local.yml run --rm django python manage.py train
 
-update_new_db:
-	docker-compose -f local.yml run --rm django python manage.py update_db --new true 2 3 4
+load_imdb:
+	docker-compose -f local.yml run --rm django python manage.py update_db --new True --skip 2 3 4
 
 load_ratings:
 	docker-compose -f local.yml run --rm django python manage.py load_ratings
+
+quickstart:
+	make migrate
+	make load_imdb
+	make load_ratings
+
+shell:
+	docker-compose -f local.yml run --rm django python manage.py shell

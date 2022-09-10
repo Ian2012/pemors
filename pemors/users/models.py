@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import CharField
@@ -25,6 +26,9 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+
+    def is_syntethic_user(self):
+        return self.username.startswith(settings.SYNTETHIC_USER_PATTERN)
 
 
 class Status(models.Model):

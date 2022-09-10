@@ -2,6 +2,7 @@ import csv
 import subprocess
 import sys
 
+from django.conf import settings
 from django.db import transaction
 from tqdm import tqdm
 
@@ -16,6 +17,7 @@ from pemors.titles.models import (
     TitleGenre,
     UserRating,
 )
+from pemors.users.models import User
 
 csv.field_size_limit(sys.maxsize)
 
@@ -318,6 +320,35 @@ class CrewPreprocessor(Preprocesor):
         )
 
 
+class UserPreprocessor(Preprocesor):
+    def rename(self):
+        self.stdout.write("\tRenaming columns...")
+
+        subprocess.check_call(
+            f' sed -i "1i user_id::twitter_id" downloads/{self.file_name}',
+            shell=True,
+        )
+
+    def process_in_bulk(self, reader, n):
+        users = []
+
+        for data in tqdm(reader, total=n):
+            user = User(
+                username=generate_username(data.get("user_id")),
+                email=generate_username(data.get("user_id")) + "@pemors.com",
+            )
+            users.append(user)
+
+            if len(users) > BATCH_SIZE:
+                User.objects.bulk_create(users)
+                users = []
+
+        User.objects.bulk_create(users)
+
+    def process_no_bulk(self, file_id, reader):
+        return NotImplementedError
+
+
 class UserRatingPreprocessor(Preprocesor):
     def rename(self):
         self.stdout.write("\tRenaming columns...")
@@ -331,11 +362,21 @@ class UserRatingPreprocessor(Preprocesor):
         user_ratings = []
         self.stdout.write("\tFetching movies...")
         titles = {title.id: title for title in Title.objects.all()}
+        synthetic_users = {
+            user.username: user.id
+            for user in User.objects.filter(
+                username__startswith=settings.SYNTETHIC_USER_PATTERN
+            )
+        }
 
         for data in tqdm(reader, total=n):
             if not self.validate(data, titles):
                 continue
-            user_rating = UserRating(**data)
+            user_rating = UserRating(
+                rating=data.get("rating"),
+                user_id=synthetic_users.get(generate_username(data.get("user_id"))),
+                title_id=data.get("title_id"),
+            )
             user_ratings.append(user_rating)
 
             if len(user_ratings) > BATCH_SIZE:
@@ -349,10 +390,13 @@ class UserRatingPreprocessor(Preprocesor):
 
     def validate(self, data, titles):
         data.pop("")
-        data.pop("user_id")
         data.pop("rating_timestamp")
         if not titles.get(f"tt{data['title_id']}", False):
             return False
         else:
             data["title_id"] = f"tt{data['title_id']}"
             return True
+
+
+def generate_username(user_id):
+    return f"{settings.SYNTETHIC_USER_PATTERN}{user_id}"

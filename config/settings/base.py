@@ -312,3 +312,4 @@ SPECTACULAR_SETTINGS = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+SYNTETHIC_USER_PATTERN = "SyntethicUser"
