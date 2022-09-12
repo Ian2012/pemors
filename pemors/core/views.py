@@ -1,3 +1,4 @@
+import dask.dataframe as dd
 import pandas as pd
 from django.db.models import Case, When
 from django.views.generic import TemplateView
@@ -23,12 +24,14 @@ def recommend_movies(user):
         return get_default_titles()
 
     movie_rating = pd.DataFrame(list(UserRating.objects.all().values()))
-    if movie_rating.empty:
+    movie_rating = dd.from_pandas(movie_rating, npartitions=1000)
+    movie_rating.categorize(columns="title_id")
+    if len(movie_rating.index) == 0:
         return get_default_titles()
 
-    print(movie_rating.head())
+    print(movie_rating.dtypes)
     userRatings = movie_rating.pivot_table(
-        index=["user_id"], columns=["title_id"], values="rating"
+        index="user_id", columns="title_id", values="rating"
     )
     userRatings = userRatings.fillna(0, axis=1)
     corrMatrix = userRatings.corr(method="pearson")

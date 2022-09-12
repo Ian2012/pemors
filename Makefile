@@ -29,3 +29,7 @@ quickstart:
 
 shell:
 	docker-compose -f local.yml run --rm django python manage.py shell
+
+
+django-bash:
+	docker exec -it pemors_local_django /bin/bash
