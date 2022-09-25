@@ -1,62 +1,73 @@
-from collections import defaultdict
-
 import pandas as pd
+from django.conf import settings
 from django.db.models import Count
-from surprise import Dataset, KNNWithZScore, Reader, accuracy
-from surprise.model_selection import train_test_split
+from surprise import Dataset, Reader
 
-from pemors.titles.models import UserRating
-
-
-class MovieRecommender:
-    prediction = None
-
-    # def __init__(self):
-    # self.predictions = None
-    # self.load_data()
-
-    def load_data(self):
-        print("Loading data")
-        users = (
-            UserRating.objects.values("user")
-            .annotate(total=Count("user"))
-            .filter(total__gte=10)
-            .values("user")
-        )
-        user_ratings = UserRating.objects.filter(user__in=users).values()
-        dataframe = pd.DataFrame(list(user_ratings))
-        data = Dataset.load_from_df(
-            dataframe[["user_id", "title_id", "rating"]], Reader(rating_scale=(1, 10))
-        )
-
-        self.train(data)
-
-    def train(self, data):
-        print("Training")
-        bsl_options = {"method": "als", "n_epochs": 5, "reg_u": 12, "reg_i": 5}
-        sim_options = {"name": "pearson_baseline"}
-        trainset, testset = train_test_split(data, test_size=0.25)
-        algo = KNNWithZScore(bsl_options=bsl_options, sim_options=sim_options)
-        predictions = algo.fit(trainset).test(testset)
-        accuracy.rmse(predictions)
-
-        self.predictions = predictions
-
-    def recommend(self, user, n=10):
-
-        top_n = defaultdict(list)
-        for uid, iid, true_r, est, _ in filter(
-            lambda x: x[0] == user.id, self.predictions
-        ):
-            top_n[uid].append((iid, est))
-
-        for uid, user_ratings in top_n.items():
-            user_ratings.sort(key=lambda x: x[1], reverse=True)
-            top_n[uid] = user_ratings[:n]
-
-        print(top_n[user.id])
-        return top_n[user.id]
+from pemors.titles.models import Title, UserRating
 
 
-# KNNWithZScore
-# KNNWithMeans: Es lento de entrenar, da predicciones sobre nuevos datos
+class Recommender:
+    dataframe = None
+    dataset = None
+
+    def recommend(self, user, k=20):
+        algo, titles_available = self._load_data(user)
+        # This can be cached while there are no new users nor movies
+
+        predictions = [algo.predict(user.id, iid) for iid in titles_available]
+        print("RECOMMENDING")
+        recommendations = self.get_recommendation(predictions)
+        for i, recommendation in enumerate(recommendations[0:k]):
+            title = Title.objects.get(id=recommendation["title"])
+            recommendations[i]["title"] = title
+
+        return recommendations[0:k]
+
+    def _load_data(self, user):
+        if self.dataframe is None:
+            users = (
+                UserRating.objects.values("user")
+                .annotate(total=Count("user"))
+                .filter(total__gte=100)
+                .values("user")
+            )
+            self.dataframe = pd.DataFrame(
+                list(UserRating.objects.filter(user__in=users).values())
+            )
+            print("LOADING")
+        if self.dataset is None:
+            self.dataset = Dataset.load_from_df(
+                self.dataframe[["user_id", "title_id", "rating"]],
+                Reader(rating_scale=(1, 10)),
+            )
+            print("LOADING")
+
+        rated_titles = user.ratings.values_list("title_id", flat=True)
+        titles_available = self.dataframe["title_id"].unique()
+        titles_available = [
+            title for title in titles_available if title not in rated_titles
+        ]
+
+        trainset = self.dataset.build_full_trainset()
+        algo = settings.RECOMMENDER_ALGORITHM
+
+        # TODO Create a model that stores the last time a fit happened, amount of users and ratings. Then,
+        #  compare it with a count to verify if has changed.
+        if self.has_changed():
+            print("FITTING")
+            algo.fit(trainset)
+
+        return algo, titles_available
+
+    def has_changed(self):
+        return True
+
+    def get_recommendation(self, predictions):
+        recommendations = []
+        for uid, iid, true_r, est, _ in predictions:
+            recommendations.append(
+                {"title": iid, "rating": est},
+            )
+
+        recommendations.sort(key=lambda x: x["rating"], reverse=True)
+        return recommendations

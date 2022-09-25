@@ -2,8 +2,8 @@
 
 {% block content %}
   <ul class="list-disc">
-    {% for movie in recommended_movies %}
-      <li><a href="{% url 'titles:title' movie.id %}">{{ movie.original_title }} </a></li>
+    {% for values in recommended_movies %}
+      <li><a href="{% url 'titles:title' values.title.id %}">{{ values.title.original_title }} {{ values.rating }} </a></li>
     {% endfor %}
   </ul>
 {% endblock %}

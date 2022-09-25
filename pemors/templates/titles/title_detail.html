@@ -61,7 +61,7 @@
           rating = rating.replace('star', '')
           fetch('/api/titles/user_rating/', {
             method: "POST",
-            body: JSON.stringify({'title': titleid, 'rating': parseInt(rating)}),
+            body: JSON.stringify({'title': titleid, 'rating': parseInt(rating)*2}),
             headers: {
               "Content-type": "application/json;charset=UTF-8",
               "X-CSRFToken": csrftoken

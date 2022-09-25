@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 import environ
 from pathlib import Path
+from surprise import SVD
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # pemors/
@@ -260,7 +261,6 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
-
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
@@ -313,3 +313,5 @@ SPECTACULAR_SETTINGS = {
 # Your stuff...
 # ------------------------------------------------------------------------------
 SYNTETHIC_USER_PATTERN = "SyntethicUser"
+
+RECOMMENDER_ALGORITHM = SVD()
