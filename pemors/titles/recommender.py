@@ -1,4 +1,7 @@
+from os import path
+
 import pandas as pd
+import surprise
 from django.conf import settings
 from django.db.models import Count
 from surprise import Dataset, Reader
@@ -12,15 +15,13 @@ class Recommender:
 
     def recommend(self, user, k=20):
         algo, titles_available = self._load_data(user)
-        # This can be cached while there are no new users nor movies
-
         predictions = [algo.predict(user.id, iid) for iid in titles_available]
-        print("RECOMMENDING")
         recommendations = self.get_recommendation(predictions)
         for i, recommendation in enumerate(recommendations[0:k]):
             title = Title.objects.get(id=recommendation["title"])
             recommendations[i]["title"] = title
 
+        # TODO Sort by user genre preferences
         return recommendations[0:k]
 
     def _load_data(self, user):
@@ -34,13 +35,11 @@ class Recommender:
             self.dataframe = pd.DataFrame(
                 list(UserRating.objects.filter(user__in=users).values())
             )
-            print("LOADING")
         if self.dataset is None:
             self.dataset = Dataset.load_from_df(
                 self.dataframe[["user_id", "title_id", "rating"]],
                 Reader(rating_scale=(1, 10)),
             )
-            print("LOADING")
 
         rated_titles = user.ratings.values_list("title_id", flat=True)
         titles_available = self.dataframe["title_id"].unique()
@@ -51,16 +50,14 @@ class Recommender:
         trainset = self.dataset.build_full_trainset()
         algo = settings.RECOMMENDER_ALGORITHM
 
-        # TODO Create a model that stores the last time a fit happened, amount of users and ratings. Then,
-        #  compare it with a count to verify if has changed.
-        if self.has_changed():
-            print("FITTING")
+        file_name = path.expanduser(f"dump_file{user.id}")
+        if path.exists(file_name):
+            _, algo = surprise.dump.load(file_name)
+        else:
             algo.fit(trainset)
+            surprise.dump.dump(file_name, algo=algo)
 
         return algo, titles_available
-
-    def has_changed(self):
-        return True
 
     def get_recommendation(self, predictions):
         recommendations = []
