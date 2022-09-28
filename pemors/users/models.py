@@ -38,10 +38,13 @@ class Status(models.Model):
 
 class Profile(models.Model):
     user = models.ForeignKey(
-        to="User", on_delete=models.CASCADE, related_name="profile"
+        to="User",
+        on_delete=models.CASCADE,
+        related_name="profile",
+        related_query_name="profile",
     )
-    agr = models.FloatField(default=0)
-    con = models.FloatField(default=0)
-    ext = models.FloatField(default=0)
-    neu = models.FloatField(default=0)
-    opn = models.FloatField(default=0)
+    agr = models.DecimalField(default=0, decimal_places=3, max_digits=4)
+    con = models.DecimalField(default=0, decimal_places=3, max_digits=4)
+    ext = models.DecimalField(default=0, decimal_places=3, max_digits=4)
+    neu = models.DecimalField(default=0, decimal_places=3, max_digits=4)
+    opn = models.DecimalField(default=0, decimal_places=3, max_digits=4)

@@ -122,9 +122,8 @@ class TitlePreprocessor(Preprocesor):
 
     def validate_title(self, data):
         data.pop("endYear")
+        data.pop("isAdult")
         if data["type"] not in ["movie", "tvMovie"]:
-            return False
-        if data.pop("isAdult") == "1":
             return False
         try:
             data["runtime"] = None if data["runtime"] == "\\N" else int(data["runtime"])
