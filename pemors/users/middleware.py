@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from pemors.titles.models import UserRating
 from pemors.users.models import Profile
 from pemors.users.utils import predict_personality_for_user
 
@@ -26,4 +27,10 @@ class CheckUserProfileMiddleware:
             else:
                 if not request.path == reverse("users:personality"):
                     return redirect("users:personality")
+
+        count = UserRating.objects.filter(user=request.user).count()
+        if count < 10:
+            if not request.path == reverse("titles:coldstart"):
+                return redirect("titles:coldstart")
+
         return self.get_response(request)

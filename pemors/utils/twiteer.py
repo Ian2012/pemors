@@ -1,6 +1,6 @@
 import environ
 import tweepy
-from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.models import SocialAccount, SocialApp
 
 from pemors.users.models import Status
 
@@ -12,7 +12,8 @@ def get_user_tweets(user):
         return []
 
     social_account = SocialAccount.objects.get(user=user)
-    client = tweepy.Client(bearer_token=env("TWITTER_BEARER_TOKEN"))
+    social_app = SocialApp.objects.get(name="Twitter")
+    client = tweepy.Client(bearer_token=social_app.key)
     response = client.get_users_tweets(
         id=social_account.uid, max_results=100, tweet_fields=[""]
     )

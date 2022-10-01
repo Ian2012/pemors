@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 
 from pemors.titles.models import Title, UserRating
 
@@ -16,4 +16,10 @@ class TitleDetailView(LoginRequiredMixin, DetailView):
         return context_data
 
 
+class ColdStart(LoginRequiredMixin, TemplateView):
+    template_name = "titles/coldstart.html"
+
+
 title_detail_view = TitleDetailView.as_view()
+
+coldstart_view = ColdStart.as_view()
