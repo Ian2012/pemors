@@ -17,7 +17,7 @@ train:
 	docker-compose -f local.yml run --rm django python manage.py train
 
 load_imdb:
-	docker-compose -f local.yml run --rm django python manage.py update_db --new True --skip 2 3 4
+	docker-compose -f local.yml run --rm django python manage.py update_db --new True
 
 load_ratings:
 	docker-compose -f local.yml run --rm django python manage.py load_ratings
