@@ -2,7 +2,7 @@ import sys
 from decimal import Decimal
 
 import pandas as pd
-from django.conf import settings
+import surprise
 from django.db.models import Count
 from surprise import Dataset, Reader
 
@@ -43,9 +43,14 @@ class Recommender:
     dataset = None
 
     def recommend(self, user: User, k=20, use_genre_preferences=True):
-        algo, titles_available = self._load_data(user)
-        predictions = [algo.predict(user.id, iid) for iid in titles_available]
-        recommendations = self.get_recommendation(predictions)[0:k]
+        if user.profile.recommender is None:
+            algo, available_titles = self._train(user)
+        else:
+            available_titles = self._load_available_titles(user)
+            algo = user.profile.recommender
+
+        predictions = [algo.predict(user.id, iid) for iid in available_titles]
+        recommendations = self._get_recommendation(predictions)[0:k]
 
         for i, recommendation in enumerate(recommendations):
             title = Title.objects.get(id=recommendation["title"])
@@ -56,8 +61,76 @@ class Recommender:
 
         return recommendations
 
+    def _train(self, user):
+        dataset, available_titles = self._load_data(user)
+        trainset = dataset.build_full_trainset()
+        algo = surprise.SVD()
+        algo.fit(trainset)
+        user.profile.recommender = algo
+        user.profile.save()
+
+        return algo, available_titles
+
+    def _load_data(self, user):
+        users = (
+            UserRating.objects.values("user")
+            .annotate(total=Count("user"))
+            .filter(total__gte=10)
+            .values("user")
+        )
+
+        dataframe = pd.DataFrame(
+            list(UserRating.objects.filter(user__in=users).values())
+        )
+
+        dataset = Dataset.load_from_df(
+            dataframe[["user_id", "title_id", "rating"]],
+            Reader(rating_scale=(1, 10)),
+        )
+
+        rated_titles = user.ratings.values_list("title_id", flat=True)
+        available_titles = dataframe["title_id"].unique()
+        available_titles = [
+            title for title in available_titles if title not in rated_titles
+        ]
+        return dataset, available_titles
+
+    def _load_available_titles(self, user):
+        users = (
+            UserRating.objects.values("user")
+            .annotate(total=Count("user"))
+            .filter(total__gte=10)
+            .values("user")
+        )
+        available_titles = (
+            UserRating.objects.filter(user__in=users)
+            .exclude(user=user)
+            .distinct("title_id")
+            .values_list("title_id", flat=True)
+        )
+        return available_titles
+
+    def _get_recommendation(self, predictions):
+        recommendations = []
+        for uid, iid, true_r, est, _ in predictions:
+            recommendations.append(
+                {"title": iid, "rating": Decimal(est)},
+            )
+
+        recommendations.sort(key=lambda x: x["rating"], reverse=True)
+        return recommendations
+
     def sort_recommendations_by_genre_preferences(self, recommendations, user):
-        user_genre_preferences = self.calculate_user_genre_preferences(user)
+        profile = Profile.objects.get(user=user)
+        user_profile = [profile.opn, profile.con, profile.ext, profile.agr, profile.neu]
+        user_genre_preferences = {}
+
+        for genre, values in USER_GENRE_PREFERENCES.items():
+            distance = sum(
+                abs(user_trait - Decimal(genre_trait))
+                for user_trait, genre_trait in zip(user_profile, values)
+            )
+            user_genre_preferences[genre] = distance
 
         for i, recommendation in enumerate(recommendations):
             recommendations[i]["genres"] = [
@@ -77,65 +150,4 @@ class Recommender:
                 recommendation["rating"] / 2 + most_valuable_genre_value
             )
         recommendations.sort(key=lambda x: x["predicted_rating"], reverse=True)
-        return recommendations
-
-    def calculate_user_genre_preferences(self, user):
-        profile = Profile.objects.get(user=user)
-        user_profile = [profile.opn, profile.con, profile.ext, profile.agr, profile.neu]
-        user_genre_preferences = {}
-
-        for genre, values in USER_GENRE_PREFERENCES.items():
-            distance = sum(
-                abs(user_trait - Decimal(genre_trait))
-                for user_trait, genre_trait in zip(user_profile, values)
-            )
-            user_genre_preferences[genre] = distance
-
-        sorted_user_genre_preferences = sorted(
-            user_genre_preferences.items(), key=lambda x: x[1], reverse=True
-        )
-        print(sorted_user_genre_preferences)
-        return user_genre_preferences
-
-    def _load_data(self, user):
-        users = (
-            UserRating.objects.values("user")
-            .annotate(total=Count("user"))
-            .filter(total__gte=10)
-            .values("user")
-        )
-        self.dataframe = pd.DataFrame(
-            list(UserRating.objects.filter(user__in=users).values())
-        )
-
-        self.dataset = Dataset.load_from_df(
-            self.dataframe[["user_id", "title_id", "rating"]],
-            Reader(rating_scale=(1, 10)),
-        )
-
-        rated_titles = user.ratings.values_list("title_id", flat=True)
-        titles_available = self.dataframe["title_id"].unique()
-        titles_available = [
-            title for title in titles_available if title not in rated_titles
-        ]
-
-        if user.profile.recommender is None:
-            trainset = self.dataset.build_full_trainset()
-            algo = settings.RECOMMENDER_ALGORITHM
-            algo.fit(trainset)
-            user.profile.recommender = algo
-            user.profile.save()
-        else:
-            algo = user.profile.recommender
-
-        return algo, titles_available
-
-    def get_recommendation(self, predictions):
-        recommendations = []
-        for uid, iid, true_r, est, _ in predictions:
-            recommendations.append(
-                {"title": iid, "rating": Decimal(est)},
-            )
-
-        recommendations.sort(key=lambda x: x["rating"], reverse=True)
         return recommendations
