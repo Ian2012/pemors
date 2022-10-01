@@ -10,12 +10,13 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data["recommended_movies"] = self.movie_recommender.recommend(
-            User.objects.prefetch_related("ratings", "ratings__title", "profile").get(
-                id=self.request.user.id
-            ),
-            use_genre_preferences=False,
-        )
+        if self.request.user.is_authenticated:
+            context_data["recommended_movies"] = self.movie_recommender.recommend(
+                User.objects.prefetch_related(
+                    "ratings", "ratings__title", "profile"
+                ).get(id=self.request.user.id),
+                use_genre_preferences=True,
+            )
         return context_data
 
 

@@ -1,15 +1,16 @@
 import sys
 from decimal import Decimal
-from os import path
 
 import pandas as pd
-import surprise
 from django.conf import settings
 from django.db.models import Count
 from surprise import Dataset, Reader
 
 from pemors.titles.models import Title, UserRating
 from pemors.users.models import Profile, User
+
+# from os import path
+
 
 USER_GENRE_PREFERENCES = {
     "Action": [3.87, 3.45, 3.57, 3.58, 2.72],
@@ -97,37 +98,34 @@ class Recommender:
         return user_genre_preferences
 
     def _load_data(self, user):
-        if self.dataframe is None:
-            users = (
-                UserRating.objects.values("user")
-                .annotate(total=Count("user"))
-                .filter(total__gte=10)
-                .values("user")
-            )
-            self.dataframe = pd.DataFrame(
-                list(UserRating.objects.filter(user__in=users).values())
-            )
-        if self.dataset is None:
-            self.dataset = Dataset.load_from_df(
-                self.dataframe[["user_id", "title_id", "rating"]],
-                Reader(rating_scale=(1, 10)),
-            )
+        users = (
+            UserRating.objects.values("user")
+            .annotate(total=Count("user"))
+            .filter(total__gte=10)
+            .values("user")
+        )
+        self.dataframe = pd.DataFrame(
+            list(UserRating.objects.filter(user__in=users).values())
+        )
+
+        self.dataset = Dataset.load_from_df(
+            self.dataframe[["user_id", "title_id", "rating"]],
+            Reader(rating_scale=(1, 10)),
+        )
 
         rated_titles = user.ratings.values_list("title_id", flat=True)
         titles_available = self.dataframe["title_id"].unique()
         titles_available = [
             title for title in titles_available if title not in rated_titles
         ]
+        print(len(titles_available))
+
+        print(user.id in self.dataframe["user_id"])
 
         trainset = self.dataset.build_full_trainset()
         algo = settings.RECOMMENDER_ALGORITHM
 
-        file_name = path.expanduser(f"dump_file{user.id}")
-        if path.exists(file_name):
-            _, algo = surprise.dump.load(file_name)
-        else:
-            algo.fit(trainset)
-            surprise.dump.dump(file_name, algo=algo)
+        algo.fit(trainset)
 
         return algo, titles_available
 
@@ -137,4 +135,6 @@ class Recommender:
             recommendations.append(
                 {"title": iid, "rating": Decimal(est)},
             )
+
+        recommendations.sort(key=lambda x: x["rating"], reverse=True)
         return recommendations

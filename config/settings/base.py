@@ -2,8 +2,8 @@
 Base settings to build other settings files upon.
 """
 import environ
+import surprise
 from pathlib import Path
-from surprise import SVD
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # pemors/
@@ -314,4 +314,4 @@ SPECTACULAR_SETTINGS = {
 # ------------------------------------------------------------------------------
 SYNTETHIC_USER_PATTERN = "SyntethicUser"
 
-RECOMMENDER_ALGORITHM = SVD()
+RECOMMENDER_ALGORITHM = surprise.SVD()
