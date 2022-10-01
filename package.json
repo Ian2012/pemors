@@ -1,0 +1,27 @@
+{
+  "name": "pemors",
+  "version": "1.0.0",
+  "description": "Perosnality Aware Movie Recommendation System",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+     "dev": "webpack --mode development --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ian2012/pemors.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ian2012/pemors/issues"
+  },
+  "homepage": "https://github.com/Ian2012/pemors#readme",
+  "devDependencies": {
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
