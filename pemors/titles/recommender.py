@@ -118,14 +118,15 @@ class Recommender:
         titles_available = [
             title for title in titles_available if title not in rated_titles
         ]
-        print(len(titles_available))
 
-        print(user.id in self.dataframe["user_id"])
-
-        trainset = self.dataset.build_full_trainset()
-        algo = settings.RECOMMENDER_ALGORITHM
-
-        algo.fit(trainset)
+        if user.profile.recommender is None:
+            trainset = self.dataset.build_full_trainset()
+            algo = settings.RECOMMENDER_ALGORITHM
+            algo.fit(trainset)
+            user.profile.recommender = algo
+            user.profile.save()
+        else:
+            algo = user.profile.recommender
 
         return algo, titles_available
 
