@@ -12,6 +12,9 @@ class Title(models.Model):
     start_year = models.IntegerField(null=True)
     runtime = models.IntegerField(null=True)
 
+    def __str__(self) -> str:
+        return self.primary_title
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=32, unique=True)

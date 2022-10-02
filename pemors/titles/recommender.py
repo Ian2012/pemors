@@ -149,5 +149,6 @@ class Recommender:
             recommendations[i]["predicted_rating"] = (
                 recommendation["rating"] / 2 + most_valuable_genre_value
             )
+            # TODO Resolver esto
         recommendations.sort(key=lambda x: x["predicted_rating"], reverse=True)
         return recommendations
