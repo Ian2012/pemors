@@ -14,7 +14,7 @@ makemessages:
 	docker-compose -f local.yml run --rm django python manage.py makemessages --locale es -i venv
 
 compilemessage:
-	docker-compose -f local.yml run --rm django python manage.py makemessages --locale es -i venv
+	docker-compose -f local.yml run --rm django python manage.py compilemessages --ignore=venv
 
 createsuperuser:
 	docker-compose -f local.yml run --rm django python manage.py createsuperuser

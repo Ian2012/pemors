@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-05 00:00+0000\n"
+"POT-Creation-Date: 2022-10-05 01:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -266,8 +266,9 @@ msgid ""
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
-"Hemos enviado un correo para tu verificación. Sigue en enlace"
-"para finalizar el proceso de registro."
+"Hemos enviado un correo para tu verificación. Sigue en enlacepara finalizar "
+"el proceso de registro."
+
 #: pemors/templates/account/verified_email_required.html:12
 msgid ""
 "This part of the site requires us to verify that\n"
@@ -291,14 +292,16 @@ msgstr ""
 "Hemos enviado un correo para tu\n"
 "                         verificación. Por favor sigue el enlace en este "
 "correo"
+
 #: pemors/templates/account/verified_email_required.html:20
 #, python-format
 msgid ""
 "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
 "mail address</a>."
 msgstr ""
-"<strong>Nota:</strong> aún puedes <a href=\"%(email_url)s\">cambiar tu correo"
-"electrónico</a>."
+"<strong>Nota:</strong> aún puedes <a href=\"%(email_url)s\">cambiar tu "
+"correoelectrónico</a>."
+
 #: pemors/templates/base.html:44
 msgid "Home"
 msgstr "Inicio"
@@ -314,6 +317,10 @@ msgstr "Mi Perfil"
 #: pemors/templates/base.html:56
 msgid "Log In"
 msgstr "Iniciar sesión"
+
+#: pemors/templates/pages/home.html:6
+msgid "Recommended movies"
+msgstr "Películas recomendadas"
 
 #: pemors/templates/users/personality.html:10
 msgid "How much do you agree with"
