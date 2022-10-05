@@ -10,6 +10,12 @@ migrate:
 makemigrations:
 	docker-compose -f local.yml run --rm django python manage.py makemigrations
 
+makemessages:
+	docker-compose -f local.yml run --rm django python manage.py makemessages --locale es -i venv
+
+compilemessage:
+	docker-compose -f local.yml run --rm django python manage.py makemessages --locale es -i venv
+
 createsuperuser:
 	docker-compose -f local.yml run --rm django python manage.py createsuperuser
 

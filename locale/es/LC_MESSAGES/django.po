@@ -1,0 +1,548 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-05 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: pemors/templates/account/account_inactive.html:5
+#: pemors/templates/account/account_inactive.html:8
+msgid "Account Inactive"
+msgstr "Cuenta Inactiva"
+
+#: pemors/templates/account/account_inactive.html:10
+msgid "This account is inactive."
+msgstr "Esta cuenta es inactiva"
+
+#: pemors/templates/account/email.html:6
+msgid "Account"
+msgstr "Cuenta"
+
+#: pemors/templates/account/email.html:9
+msgid "E-mail Addresses"
+msgstr "Direcciones de correo eletrónico"
+
+#: pemors/templates/account/email.html:12
+msgid "The following e-mail addresses are associated with your account:"
+msgstr ""
+"Las siguiente direcciones de correo electrónico están asociadas a tu cuenta"
+
+#: pemors/templates/account/email.html:26
+msgid "Verified"
+msgstr "Verificado"
+
+#: pemors/templates/account/email.html:28
+msgid "Unverified"
+msgstr "No verificado"
+
+#: pemors/templates/account/email.html:30
+msgid "Primary"
+msgstr "Principal"
+
+#: pemors/templates/account/email.html:36
+msgid "Make Primary"
+msgstr "Hacer principal"
+
+#: pemors/templates/account/email.html:37
+msgid "Re-send Verification"
+msgstr "Re enviar verificación"
+
+#: pemors/templates/account/email.html:38
+msgid "Remove"
+msgstr "Quitar"
+
+#: pemors/templates/account/email.html:45
+msgid "Warning:"
+msgstr "Alerta:"
+
+#: pemors/templates/account/email.html:45
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+"Actualmente no tienes ningún correo electrónico configurado. Deberías "
+"añadiruna dirección de correo electrónico para recibir notificaciones, "
+"recordar tucontraseña, etc."
+
+#: pemors/templates/account/email.html:50
+msgid "Add E-mail Address"
+msgstr "Añadir dirección de correo electrónico"
+
+#: pemors/templates/account/email.html:55
+msgid "Add E-mail"
+msgstr "Añadir correo"
+
+#: pemors/templates/account/email.html:65
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr "¿Realmente deseas eliminar el correo electrónico seleccionado?"
+
+#: pemors/templates/account/email_confirm.html:6
+#: pemors/templates/account/email_confirm.html:10
+msgid "Confirm E-mail Address"
+msgstr "Confirmar correo electrónico"
+
+#: pemors/templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+"Por favor confirmar que <a href=\"mailto:%(email)s\">%(email)s</a> es un "
+"correoelectrónico para el usuario %(user_display)s."
+
+#: pemors/templates/account/email_confirm.html:20
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: pemors/templates/account/email_confirm.html:27
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+"Este enlace de confirmación de correo expiró o es inválido. Por favor<a href="
+"\"%(email_url)s\"> solicitar una nueva confirmación de correo"
+
+#: pemors/templates/account/login.html:7 pemors/templates/account/login.html:11
+#: pemors/templates/account/login.html:56
+msgid "Sign In"
+msgstr "Iniciar sesión"
+
+#: pemors/templates/account/login.html:17
+msgid "Please sign in with one of your existing third party accounts:"
+msgstr "Por favor iniciar sesión con una de tus cuentas existentes"
+
+#: pemors/templates/account/login.html:19
+#, python-format
+msgid ""
+"Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and "
+"sign in below:"
+msgstr ""
+"O, <a href=\"%(signup_url)s\">registrate</a> por una %(site_name)s cuenta "
+"einicia sesión aquí:"
+
+#: pemors/templates/account/login.html:32
+msgid "or"
+msgstr "o"
+
+#: pemors/templates/account/login.html:41
+#, python-format
+msgid ""
+"If you have not created an account yet, then please <a href=\"%(signup_url)s"
+"\">sign up</a> first."
+msgstr ""
+"Si no has creado una cuenta aún, epor favor <a href=\"%(signup_url)s"
+"\">registrate</a>primero"
+
+#: pemors/templates/account/login.html:55
+msgid "Forgot Password?"
+msgstr "¿Olvidaste tu contraseña?"
+
+#: pemors/templates/account/logout.html:5
+#: pemors/templates/account/logout.html:8
+#: pemors/templates/account/logout.html:17 pemors/templates/base.html:49
+msgid "Sign Out"
+msgstr "Cerrar sesión"
+
+#: pemors/templates/account/logout.html:10
+msgid "Are you sure you want to sign out?"
+msgstr "¿Estás seguro que deseas cerrar sesión?"
+
+#: pemors/templates/account/password_change.html:6
+#: pemors/templates/account/password_change.html:9
+#: pemors/templates/account/password_change.html:14
+#: pemors/templates/account/password_reset_from_key.html:5
+#: pemors/templates/account/password_reset_from_key.html:8
+#: pemors/templates/account/password_reset_from_key_done.html:4
+#: pemors/templates/account/password_reset_from_key_done.html:7
+msgid "Change Password"
+msgstr "Cambiar contraseña"
+
+#: pemors/templates/account/password_reset.html:7
+#: pemors/templates/account/password_reset.html:11
+#: pemors/templates/account/password_reset_done.html:6
+#: pemors/templates/account/password_reset_done.html:9
+msgid "Password Reset"
+msgstr "Recuperar contraseña"
+
+#: pemors/templates/account/password_reset.html:16
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+"¿Olvidaste tu contraseña? Ingresa tu correo electrónico aquí, y te "
+"enviaremosun correo permitiendote restaurarla"
+
+#: pemors/templates/account/password_reset.html:21
+msgid "Reset My Password"
+msgstr "Recuperar my contraseña"
+
+#: pemors/templates/account/password_reset.html:24
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+"Por favor contactarnos si tienes algún problema resturando tucontraseña"
+
+#: pemors/templates/account/password_reset_done.html:15
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr "Te hemos enviado un correo, Por favor contactarnos si no lo recibes"
+
+#: pemors/templates/account/password_reset_from_key.html:8
+msgid "Bad Token"
+msgstr "Token incorrecto"
+
+#: pemors/templates/account/password_reset_from_key.html:12
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: pemors/templates/account/password_reset_from_key.html:18
+msgid "change password"
+msgstr "cambiar contraseña"
+
+#: pemors/templates/account/password_reset_from_key.html:21
+#: pemors/templates/account/password_reset_from_key_done.html:8
+msgid "Your password is now changed."
+msgstr "Tu contraseña ha cambiado"
+
+#: pemors/templates/account/password_set.html:6
+#: pemors/templates/account/password_set.html:9
+#: pemors/templates/account/password_set.html:14
+msgid "Set Password"
+msgstr "Configurar contraseña"
+
+#: pemors/templates/account/signup.html:6
+msgid "Signup"
+msgstr "Registrarse"
+
+#: pemors/templates/account/signup.html:9
+#: pemors/templates/account/signup.html:19 pemors/templates/base.html:55
+msgid "Sign Up"
+msgstr "Registrarse"
+
+#: pemors/templates/account/signup.html:11
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+"¿Ya tienes una cuenta? Por favor <a href=\"%(login_url)s\">inicia sesión</a>."
+
+#: pemors/templates/account/signup_closed.html:5
+#: pemors/templates/account/signup_closed.html:8
+msgid "Sign Up Closed"
+msgstr ""
+
+#: pemors/templates/account/signup_closed.html:10
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: pemors/templates/account/verification_sent.html:5
+#: pemors/templates/account/verification_sent.html:8
+#: pemors/templates/account/verified_email_required.html:5
+#: pemors/templates/account/verified_email_required.html:8
+msgid "Verify Your E-mail Address"
+msgstr "Verify tu dirección de correo electrónico"
+
+#: pemors/templates/account/verification_sent.html:10
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+"Hemos enviado un correo para tu verificación. Sigue en enlace"
+"para finalizar el proceso de registro."
+#: pemors/templates/account/verified_email_required.html:12
+msgid ""
+"This part of the site requires us to verify that\n"
+"                         you are who you claim to be. For this purpose, we "
+"require that you\n"
+"                         verify ownership of your e-mail address. "
+msgstr ""
+"Esta sección requiere confirmar que\n"
+"                         tú eres quiere dices ser. Para esto, necesitamos "
+"que tú\n"
+"                         verifiques la propiedad de este correo. "
+
+#: pemors/templates/account/verified_email_required.html:16
+msgid ""
+"We have sent an e-mail to you for\n"
+"                         verification. Please click on the link inside this "
+"e-mail. Please\n"
+"                         contact us if you do not receive it within a few "
+"minutes."
+msgstr ""
+"Hemos enviado un correo para tu\n"
+"                         verificación. Por favor sigue el enlace en este "
+"correo"
+#: pemors/templates/account/verified_email_required.html:20
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+"<strong>Nota:</strong> aún puedes <a href=\"%(email_url)s\">cambiar tu correo"
+"electrónico</a>."
+#: pemors/templates/base.html:44
+msgid "Home"
+msgstr "Inicio"
+
+#: pemors/templates/base.html:45
+msgid "About"
+msgstr "Sobre"
+
+#: pemors/templates/base.html:47
+msgid "My Profile"
+msgstr "Mi Perfil"
+
+#: pemors/templates/base.html:56
+msgid "Log In"
+msgstr "Iniciar sesión"
+
+#: pemors/templates/users/personality.html:10
+msgid "How much do you agree with"
+msgstr "¿Que tanto estás de acuerdo con?"
+
+#: pemors/users/admin.py:18
+msgid "Personal info"
+msgstr "Información Personal"
+
+#: pemors/users/admin.py:20
+msgid "Permissions"
+msgstr "Permisos"
+
+#: pemors/users/admin.py:31
+msgid "Important dates"
+msgstr "Fechas importantos"
+
+#: pemors/users/apps.py:7
+msgid "Users"
+msgstr "Usuarios"
+
+#: pemors/users/forms.py:11
+msgid "Am the life of the party."
+msgstr "Soy el alma de la fiesta"
+
+#: pemors/users/forms.py:12
+msgid "Feel little concern for others."
+msgstr "Siento poca preocupación por otros."
+
+#: pemors/users/forms.py:13
+msgid "Am always prepared."
+msgstr "Siempre estoy preparado."
+
+#: pemors/users/forms.py:14
+msgid "Get stressed out easily."
+msgstr "Me estreso fácilmente."
+
+#: pemors/users/forms.py:15
+msgid "Have a rich vocabulary."
+msgstr "Tengo un rico vocabulario."
+
+#: pemors/users/forms.py:16
+msgid "Don't talk a lot."
+msgstr "No hablo mucho."
+
+#: pemors/users/forms.py:17
+msgid "Am interested in people."
+msgstr "Estoy interesado en la gente."
+
+#: pemors/users/forms.py:18
+msgid "Leave my belongings around."
+msgstr "Dejo mis pertenencias por ahí."
+
+#: pemors/users/forms.py:19
+msgid "Am relaxed most of the time."
+msgstr "Estoy relajado la mayoría del tiempo."
+
+#: pemors/users/forms.py:21
+msgid "Have difficulty understanding abstract ideas."
+msgstr "Tengo dificultades entendiendo ideas abstractas."
+
+#: pemors/users/forms.py:25
+msgid "Feel comfortable around people."
+msgstr "Me siento cómodop alrededor de personas."
+
+#: pemors/users/forms.py:26
+msgid "Insult people."
+msgstr "Insulto a las personas."
+
+#: pemors/users/forms.py:27
+msgid "Pay attention to details."
+msgstr "Presto atención a los detalles."
+
+#: pemors/users/forms.py:28
+msgid "Worry about things."
+msgstr "Me preocupan las cosas."
+
+#: pemors/users/forms.py:29
+msgid "Have a vivid imagination."
+msgstr "Tengo una imagicación vívida"
+
+#: pemors/users/forms.py:30
+msgid "Keep in the background."
+msgstr "Mantengo en el fondo."
+
+#: pemors/users/forms.py:31
+msgid "Sympathize with others' feelings."
+msgstr "Empatizo con los sentimientos de otros"
+
+#: pemors/users/forms.py:32
+msgid "Make a mess of things."
+msgstr "Hago un lío de las cosas."
+
+#: pemors/users/forms.py:33
+msgid "Seldom feel blue."
+msgstr "Rara vez me siento triste"
+
+#: pemors/users/forms.py:34
+msgid "Am not interested in abstract ideas."
+msgstr "No me interesan las ideas abstractas."
+
+#: pemors/users/forms.py:35
+msgid "Start conversations."
+msgstr "Inicio conversaciones."
+
+#: pemors/users/forms.py:37
+msgid "Am not interested in other people's problems."
+msgstr "No me interesan los problemas de otros."
+
+#: pemors/users/forms.py:41
+msgid "Get chores done right away."
+msgstr "Hago las tareas de inmediato."
+
+#: pemors/users/forms.py:42
+msgid "Am easily disturbed."
+msgstr "Me perturbo fácilmente."
+
+#: pemors/users/forms.py:43
+msgid "Have excellent ideas."
+msgstr "Tengo excelentes ideas."
+
+#: pemors/users/forms.py:44
+msgid "Have little to say."
+msgstr "Tengo poco que decir."
+
+#: pemors/users/forms.py:45
+msgid "Have a soft heart."
+msgstr "Tengo un corazón sensible."
+
+#: pemors/users/forms.py:47
+msgid "Often forget to put things back in their proper place."
+msgstr "A menudo se olvida de poner las cosas en su sitio."
+
+#: pemors/users/forms.py:51
+msgid "Get upset easily."
+msgstr "Me molesto fácilmente"
+
+#: pemors/users/forms.py:52
+msgid "Do not have a good imagination."
+msgstr "No tengo una buena imaginación"
+
+#: pemors/users/forms.py:54
+msgid "Talk to a lot of different people at parties."
+msgstr "Hablo con mucha gente diferente en las fiestas. "
+
+#: pemors/users/forms.py:58
+msgid "Am not really interested in others."
+msgstr "No estoy realmente interesado en otras personas."
+
+#: pemors/users/forms.py:59
+msgid "Like order."
+msgstr "Me gusta el orden."
+
+#: pemors/users/forms.py:60
+msgid "Change my mood a lot."
+msgstr "Cambia mucho mi estado de ánimo."
+
+#: pemors/users/forms.py:61
+msgid "Am quick to understand things."
+msgstr "Soy rápido para entender las cosas."
+
+#: pemors/users/forms.py:62
+msgid "Don't like to draw attention to myself."
+msgstr "No me gusta llamar la atención."
+
+#: pemors/users/forms.py:63
+msgid "Take time out for others."
+msgstr "Dedico tiempo a los demás."
+
+#: pemors/users/forms.py:64
+msgid "Shirk my duties."
+msgstr "Me desentiendo de mis deberes."
+
+#: pemors/users/forms.py:65
+msgid "Have frequent mood swings."
+msgstr "Tengo cambios frecuentos de humor."
+
+#: pemors/users/forms.py:66
+msgid "Use difficult words."
+msgstr "Uso palabras díficiles."
+
+#: pemors/users/forms.py:68
+msgid "Don't mind being the center of attention."
+msgstr "No me importa ser el centro de atención"
+
+#: pemors/users/forms.py:72
+msgid "Feel others' emotions."
+msgstr "Siento las emociones de otros"
+
+#: pemors/users/forms.py:73
+msgid "Follow a schedule."
+msgstr "Sigo un horario."
+
+#: pemors/users/forms.py:74
+msgid "Get irritated easily."
+msgstr "Me irrito fácilmente"
+
+#: pemors/users/forms.py:75
+msgid "Spend time reflecting on things."
+msgstr "Dedico tiempo a reflexionar sobre las cosas"
+
+#: pemors/users/forms.py:76
+msgid "Am quiet around strangers."
+msgstr "Soy callado alrededor de extraños."
+
+#: pemors/users/forms.py:77
+msgid "Make people feel at ease."
+msgstr "Hago que la gente se sienta a gusto."
+
+#: pemors/users/forms.py:78
+msgid "Am exacting in my work."
+msgstr "Soy exigente en mi trabajo."
+
+#: pemors/users/forms.py:79
+msgid "Often feel blue."
+msgstr "A menudo me siento triste."
+
+#: pemors/users/forms.py:80
+msgid "Am full of ideas."
+msgstr "Estoy lleno de ideas."
+
+#: pemors/users/forms.py:99 pemors/users/tests/test_forms.py:39
+msgid "This username has already been taken."
+msgstr "Este nombre de usuario ya ha sido tomado."
+
+#: pemors/users/models.py:18
+msgid "Name of User"
+msgstr "Nombre de usuario"
+
+#: pemors/users/views.py:33
+msgid "Information successfully updated"
+msgstr "Información correctamente actualizada"
