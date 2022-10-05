@@ -139,15 +139,17 @@ class Recommender:
             ]
 
             most_valuable_genre_value = sys.maxsize
+            counter = 0
             for genre in recommendation["genres"]:
                 if (
                     genre in USER_GENRE_PREFERENCES.keys()
                     and user_genre_preferences[genre] < most_valuable_genre_value
                 ):
-                    most_valuable_genre_value = user_genre_preferences[genre]
+                    most_valuable_genre_value = 10 - user_genre_preferences[genre]
+                    counter += 1
 
             recommendations[i]["predicted_rating"] = (
-                recommendation["rating"] / 2 + most_valuable_genre_value
+                recommendation["rating"] / 2 + most_valuable_genre_value / counter
             )
             # TODO Resolver esto
         recommendations.sort(key=lambda x: x["predicted_rating"], reverse=True)
