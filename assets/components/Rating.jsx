@@ -1,17 +1,17 @@
 import ReactStars from "react-rating-stars-component";
 import React from 'react';
 
-const ratingChanged = (newRating) => {
-    console.log(newRating);
-};
+export function Rating({callback}) {
 
+    const ratingChanged = (newRating) => {
+        callback()
+    };
 
-export function Rating() {
     return <ReactStars
         classNames={"flex items-center"}
         count={10}
         onChange={ratingChanged}
-        size={24}
+        size={52}
         activeColor="#ffd700"
     />
 }

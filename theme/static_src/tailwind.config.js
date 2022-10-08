@@ -40,6 +40,12 @@ module.exports = {
          * and make sure the pattern below matches your project structure.
          */
         // '../../**/*.py'
+
+        /**
+         * React
+         */
+        "../../assets/*.{js,jsx,ts,tsx}",
+        "../../assets/**/*.{js,jsx,ts,tsx}",
     ],
     theme: {
         extend: {},
