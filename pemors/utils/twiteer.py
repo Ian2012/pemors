@@ -23,6 +23,6 @@ def get_user_tweets(user):
     translator = Translator()
 
     for tweet in response.data:
-        translation = translator.translate(tweet.text)
+        translation = translator.translate(tweet.text, dest="en")
         Status.objects.create(user=user, value=translation.text)
     return response.data

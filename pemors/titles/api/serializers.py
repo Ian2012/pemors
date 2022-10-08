@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
-from pemors.titles.models import UserRating
+from pemors.titles.models import Title, UserRating
 
 
 class UserRatingSerializer(serializers.ModelSerializer):
@@ -21,3 +21,9 @@ class UserRatingSerializer(serializers.ModelSerializer):
 
     def get_unique_together_validators(self):
         return []
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Title
+        fields = "__all__"
