@@ -52,7 +52,7 @@ export function App({movies}) {
     return (
         <div>
             <button onClick={onClick}></button>
-            <Transition mountOnEnter unmountOnExit timeout={200} in={show}>
+            <Transition mountOnEnter unmountOnExit timeout={300} in={show}>
                 {state => {
                     return <Div className={state}>{title}</Div>;
                 }}
