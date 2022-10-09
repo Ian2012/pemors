@@ -1,86 +1,48 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Rating} from "./Rating.jsx";
 
-export function Title({movie, callback, poster}) {
-    return <div>
-        <section className="text-gray-600 body-font items-center">
-            <div className="container px-5 py-24 mx-auto flex flex-wrap">
-                <div className="lg:w-1/2 w-full mb-10 lg:mb-0 rounded-lg overflow-hidden max-h-[700px]">
-                    {poster && <img alt="feature" className="object-cover object-center h-full w-full w-fit"
-                                    src={poster}></img>}
-                </div>
-                <div className="flex flex-col flex-wrap lg:py-6 -mb-10 lg:w-1/2 lg:pl-12 lg:text-left text-center">
-                    <div className="flex flex-col mb-10 lg:items-start items-center">
-                        <div
-                            className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5">
-                            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                 strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                            </svg>
-                        </div>
-                        <div className="flex-grow">
-                            <h2 className="text-gray-900 text-lg title-font font-medium mb-3">Shooting Stars</h2>
-                            <p className="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar
-                                                                     toast vegan taxidermy. Gastropub indxgo juice
-                                                                     poutine.</p>
-                            <a className="mt-3 text-indigo-500 inline-flex items-center">Learn More
-                                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                     strokeWidth="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <div className="flex flex-col mb-10 lg:items-start items-center">
-                        <div
-                            className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5">
-                            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                 strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-                                <circle cx="6" cy="6" r="3"></circle>
-                                <circle cx="6" cy="18" r="3"></circle>
-                                <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"></path>
-                            </svg>
-                        </div>
-                        <div className="flex-grow">
-                            <h2 className="text-gray-900 text-lg title-font font-medium mb-3">The Catalyzer</h2>
-                            <p className="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar
-                                                                     toast vegan taxidermy. Gastropub indxgo juice
-                                                                     poutine.</p>
-                            <a className="mt-3 text-indigo-500 inline-flex items-center">Learn More
-                                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                     strokeWidth="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <div className="flex flex-col mb-10 lg:items-start items-center">
-                        <div
-                            className="w-12 h-12 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5">
-                            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                 strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div className="flex-grow">
-                            <h2 className="text-gray-900 text-lg title-font font-medium mb-3">Neptune</h2>
-                            <p className="leading-relaxed text-base">Blue bottle crucifix vinyl post-ironic four dollar
-                                                                     toast vegan taxidermy. Gastropub indxgo juice
-                                                                     poutine.</p>
-                            <a className="mt-3 text-indigo-500 inline-flex items-center">Learn More
-                                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                     strokeWidth="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                        <Rating callback={callback}/>
-                    </div>
+export function Title({movie, callback}) {
 
+    const [poster, setPoster] = useState('')
+    const fetchData = () => {
+        fetch(`http://www.omdbapi.com/?i=${movie.id}&apikey=6aad63ad`)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                console.log("OMDB: ", data)
+                setPoster(data['Poster'] === "N/A" ? "https://cdn-icons-png.flaticon.com/512/103/103085.png" : data['Poster'])
+                movie.omdb = data
+                movie.rating = data["imdbRating"] === "N/A" ? 0 : data["imdbRating"]
+                movie.votes = data["imdbVotes"] === "N/A" ? 0 : data["imdbVotes"]
+                movie.votes = data["imdbVotes"] === "N/A" ? 0 : data["imdbVotes"]
+            })
+    }
+    fetchData()
+
+    return <section className="text-gray-600 body-font overflow-hidden">
+        <div className="container px-5 py-24 mx-auto">
+            <div className="lg:w-4/5 mx-auto flex flex-wrap">
+                {poster && <img alt="ecommerce"
+                                className="lg:w-1/2 max-h-[550px] lg:h-auto h-64 object-contain object-center rounded"
+                                src={poster}></img>}
+                <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+                    <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{movie.primary_title}</h1>
+                    <div className="flex mb-4">
+                        <span className="flex items-center">
+                            {movie.omdb && <span
+                                className="text-gray-600 ml-3">{movie.omdb.imdbVotes === "N/A" ? 0 : movie.omdb.imdbVotes} Reviews</span>}
+                        </span>
+                        <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
+                            Useful links
+                        </span>
+                    </div>
+                    {movie.omdb && <p className="leading-relaxed">
+                        {movie.omdb.Plot}
+                    </p>}
+                    <Rating callback={callback}></Rating>
                 </div>
             </div>
-
-        </section>
-    </div>
+        </div>
+    </section>
 }
