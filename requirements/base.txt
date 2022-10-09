@@ -28,7 +28,7 @@ drf-spectacular==0.23.1  # https://github.com/tfranzel/drf-spectacular
 # ML
 scikit-learn==1.1.1
 matplotlib==3.5.2
-pandas==1.4.2
+pandas==1.5.0
 scikit-surprise==1.1.3
 surprise==0.1
 django-picklefield==3.1
