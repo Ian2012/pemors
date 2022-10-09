@@ -32,6 +32,7 @@ export function App({movies}) {
     const onClick = () => {
         changeShow(prev => {
             if (currentMovieIndex >= moviesLength - 1) {
+                window.location.pathname= "/"
                 return prev
             }
 
@@ -52,7 +53,7 @@ export function App({movies}) {
     return (
         <div>
             <button onClick={onClick}></button>
-            <Transition mountOnEnter unmountOnExit timeout={300} in={show}>
+            <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
                 {state => {
                     return <Div className={state}>{title}</Div>;
                 }}

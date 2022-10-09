@@ -40,7 +40,7 @@ export function Title({movie, callback}) {
                     {movie.omdb && <p className="leading-relaxed">
                         {movie.omdb.Plot}
                     </p>}
-                    <Rating callback={callback}></Rating>
+                    <Rating movie={movie} callback={callback}></Rating>
                 </div>
             </div>
         </div>

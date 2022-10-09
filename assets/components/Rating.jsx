@@ -1,9 +1,21 @@
 import ReactStars from "react-rating-stars-component";
 import React from 'react';
 
-export function Rating({callback}) {
+export function Rating({movie, callback}) {
 
-    const ratingChanged = (newRating) => {
+    const ratingChanged = (rating) => {
+        fetch('/api/titles/user_rating/', {
+            method: "POST",
+            body: JSON.stringify({'title': movie.id, 'rating': rating}),
+            headers: {
+              "Content-type": "application/json;charset=UTF-8",
+              "X-CSRFToken": csrftoken
+            },
+            mode: 'same-origin'
+          })
+            .then(response => response.json())
+            .then(json => console.log(json))
+            .catch(err => console.log(err));
         callback()
     };
 

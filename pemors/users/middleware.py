@@ -30,11 +30,13 @@ class CheckUserProfileMiddleware:
 
         count = UserRating.objects.filter(user=request.user).count()
         if count < 10:
-            if (
-                not request.path == reverse("titles:coldstart")
-                and not request.path == reverse("account_logout")
-                and not request.path == reverse("users:personality")
-            ):
+            excluded_paths = [
+                reverse("account_logout"),
+                reverse("users:personality"),
+                reverse("titles:coldstart"),
+                reverse("titles_api:user_rating-list"),
+            ]
+            if request.path not in excluded_paths:
                 return redirect("titles:coldstart")
 
         return self.get_response(request)
