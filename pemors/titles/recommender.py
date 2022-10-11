@@ -1,4 +1,3 @@
-import sys
 from decimal import Decimal
 
 import pandas as pd
@@ -130,7 +129,9 @@ class Recommender:
                 abs(user_trait - Decimal(genre_trait))
                 for user_trait, genre_trait in zip(user_profile, values)
             )
-            user_genre_preferences[genre] = distance
+            user_genre_preferences[genre] = 10 - distance
+
+        print(user_genre_preferences)
 
         for i, recommendation in enumerate(recommendations):
             recommendations[i]["genres"] = [
@@ -138,19 +139,22 @@ class Recommender:
                 for title_genre in recommendations[i]["title"].genres.all()
             ]
 
-            most_valuable_genre_value = sys.maxsize
+            most_valuable_genre_value = 0
             counter = 0
             for genre in recommendation["genres"]:
                 if (
                     genre in USER_GENRE_PREFERENCES.keys()
                     and user_genre_preferences[genre] < most_valuable_genre_value
                 ):
-                    most_valuable_genre_value = 10 - user_genre_preferences[genre]
+                    most_valuable_genre_value += user_genre_preferences[genre]
                     counter += 1
+            if counter != 0:
+                recommendations[i]["predicted_rating"] = (
+                    recommendation["rating"] / 2 + most_valuable_genre_value / counter
+                )
+            else:
+                recommendations[i]["predicted_rating"] = recommendation["rating"]
 
-            recommendations[i]["predicted_rating"] = (
-                recommendation["rating"] / 2 + most_valuable_genre_value / counter
-            )
             # TODO Resolver esto
         recommendations.sort(key=lambda x: x["predicted_rating"], reverse=True)
         return recommendations
