@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "webpack --config webpack.dev.js --watch",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "tailwind:install": "cd theme/static_src && npm ci",
+    "tailwind:build": "cd theme/static_src && npm run build"
   },
   "repository": {
     "type": "git",

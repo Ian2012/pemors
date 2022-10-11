@@ -1,0 +1,66 @@
+[variables]
+NIXPACKS_METADATA = 'python'
+PYTHONUNBUFFERED = '1'
+
+
+[phases.setup]
+name = 'setup'
+nixPkgs = [
+    'python39',
+    'postgresql',
+    'gcc',
+    'nodejs-16_x',
+    'npm-8_x',
+]
+nixLibs = [
+    'zlib',
+    'stdenv.cc.cc.lib',
+]
+nixOverlays = ['https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz']
+
+
+[phases.install]
+name = 'install'
+dependsOn = ['setup', 'install-front']
+cmds = [
+    'python -m venv /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt',
+]
+cacheDirectories = ['/root/.cache/pip']
+paths = ['/opt/venv/bin']
+
+
+[phases.install-front]
+cmds = [
+    'npm ci',
+    'npm run tailwind:install'
+]
+dependsOn = ['setup']
+cacheDirectories = ['/root/.npm']
+paths = ['/app/node_modules/.bin']
+
+
+[phases.build]
+name = 'build'
+dependsOn = ['setup', 'install-front']
+cmds = [
+    'npm run build',
+    'npm run tailwind:build'
+]
+cacheDirectories = ['node_modules/.cache']
+
+
+[phases.release]
+name = 'release'
+dependsOn = [
+    'setup',
+    'install',
+    'build',
+]
+cmds = [
+    'python manage.py migrate',
+    'python manage.py train',
+    'python manage.py collectstatic --noinput',
+]
+
+[start]
+cmd = 'gunicorn config.wsgi:application'
