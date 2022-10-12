@@ -24,4 +24,4 @@ npm run tailwind:install
 npm run tailwind:build
 python manage.py collectstatic --noinput
 python manage.py train
-python manage.py compilemessages
+python manage.py compilemessages -l es
