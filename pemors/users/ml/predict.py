@@ -1,10 +1,14 @@
+import logging
 import pickle
+from os.path import exists
 
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 TRAITS = ["OPN", "CON", "EXT", "AGR", "NEU"]
+
+logger = logging.getLogger(__name__)
 
 
 class Predictor:
@@ -100,55 +104,60 @@ class Model:
         self.tfidf = TfidfVectorizer(stop_words="english", strip_accents="ascii")
         self.dataframe = self._read_csv()
 
-    def predict_status(self, X, regression=True):
-        X = self.tfidf.transform(X)
+    def predict_status(self, x, regression=True):
+        x = self.tfidf.transform(x)
         if regression:
-            return self.rfr.predict(X)
+            return self.rfr.predict(x)
         else:
-            return self.rfc.predict(X)
+            return self.rfc.predict(x)
 
-    def predict_proba(self, X, regression=False):
-        X = self.tfidf.transform(X)
+    def predict_proba(self, x, regression=False):
+        x = self.tfidf.transform(x)
         if regression:
             raise ValueError("Cannot predict probabilites of a regression!")
         else:
-            return self.rfc.predict_proba(X)
+            return self.rfc.predict_proba(x)
 
     def train(self):
         for trait in traits:
+            path_to_file = f"ml/training/{trait}_model.pkl"
+
+            if exists(path_to_file):
+                logger.info(
+                    f"Trait already trained. Skipping {trait}",
+                )
+                continue
+
             self._train_trait(trait, regression=True)
             self._train_trait(trait, regression=False)
-            with open(f"ml/training/{trait}_model.pkl", "wb") as f:
-                pickle.dump(self, f)
+            with open(path_to_file, "wb") as file:
+                pickle.dump(self, file)
 
-    def _fit(self, trait, X, y, regression=True):
-        print(
-            f"---- Fitting trait {trait} using {'regression' if regression else 'classifier'} model..."
+    def _fit(self, trait, x, y, regression=True):
+        logging.info(
+            f"Fitting trait {trait} using {'regression' if regression else 'classifier'} model"
         )
-        X = self.tfidf.fit_transform(X)
+        x = self.tfidf.fit_transform(x)
         if regression:
-            self.rfr = self.rfr.fit(X, y)
+            self.rfr = self.rfr.fit(x, y)
         else:
-            self.rfc = self.rfc.fit(X, y)
+            self.rfc = self.rfc.fit(x, y)
 
     def _train_trait(self, trait, regression=False):
-        print(
-            f"---- Preparing data for {trait} using {'regression' if regression else 'classifier'} model..."
+        logging.info(
+            f"Preparing data for {trait} using {'regression' if regression else 'classifier'} model"
         )
-
-        X = self.dataframe["STATUS"]
-
+        x = self.dataframe["STATUS"]
         y_column = trait_score_dict[trait] if regression else trait_cat_dict[trait]
         y = self.dataframe[y_column]
 
-        self._fit(trait, X, y, regression)
+        self._fit(trait, x, y, regression)
 
     def _read_csv(self):
-        print("-- Reading myPersonality CSV...")
+        logging.info("Reading myPersonality CSV")
         df = pd.read_csv(
             "ml/data/myPersonality/mypersonality_final.csv", encoding="ISO-8859-1"
         )
-
         trait_columns = ["cOPN", "cCON", "cEXT", "cAGR", "cNEU"]
         d = {"y": True, "n": False}
 
