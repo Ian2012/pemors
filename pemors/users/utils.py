@@ -1,13 +1,18 @@
+import logging
+
 from pemors.users.ml.predict import TRAITS, Predictor
 from pemors.utils.twiteer import get_user_tweets
 
 predictor = Predictor()
+logger = logging.getLogger(__name__)
 
 
 def predict_personality_for_user(user):
     if not user.statuses.all():
+        logger.info(f"Fetching tweets of user {user.email}")
         get_user_tweets(user)
 
+    logger.info(f"Predicting personality for user {user.email}")
     predictions = predictor.predict_personality(statuses=user.statuses.all())
     total = {trait: 0 for trait in TRAITS}
     n = len(predictions)

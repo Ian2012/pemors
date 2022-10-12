@@ -12,24 +12,18 @@ logger = logging.getLogger(__name__)
 
 
 class Predictor:
-    def __init__(self):
-        self.models = {}
-        self.load_models()
+    def load_model(self, trait):
+        with open(f"ml/training/{trait}_model.pkl", "rb") as file:
+            return pickle.load(file)
 
-    def load_models(self):
-        for trait in TRAITS:
-            with open(f"ml/training/{trait}_model.pkl", "rb") as f:
-                x = pickle.load(f)
-                self.models[trait] = x
-
-    def predict_status(self, X):
+    def predict_status(self, x):
         predictions = []
         for trait in TRAITS:
-            model = self.models[trait]
+            model = self.load_model(trait)
 
-            trait_scores = model.predict_status(X, regression=True).reshape(1, -1)
-            trait_categories = model.predict_status(X, regression=False)
-            trait_categories_probs = model.predict_proba(X)
+            trait_scores = model.predict_status(x, regression=True).reshape(1, -1)
+            trait_categories = model.predict_status(x, regression=False)
+            trait_categories_probs = model.predict_proba(x)
 
             temp = {
                 "trait": trait,
@@ -49,9 +43,10 @@ class Predictor:
         return predictions
 
     def accuracy(self, x_test, y_test):
-        print("Accuracy")
-        for trait, model_trait in self.models.items():
-            print("Trait", model_trait.score(x_test, y_test))
+        logger.debug("Accuracy")
+        for trait in TRAITS:
+            model = self.load_model(trait)
+            logging.debug("Trait", model.score(x_test, y_test))
 
 
 trait_cat_dict = {
