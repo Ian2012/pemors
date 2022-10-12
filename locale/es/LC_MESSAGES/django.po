@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-05 01:27+0000\n"
+"POT-Creation-Date: 2022-10-12 08:43-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,11 +110,11 @@ msgstr "Confirmar"
 #: pemors/templates/account/email_confirm.html:27
 #, python-format
 msgid ""
-"This e-mail confirmation link expired or is invalid. Please <a href="
-"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
 msgstr ""
-"Este enlace de confirmación de correo expiró o es inválido. Por favor<a href="
-"\"%(email_url)s\"> solicitar una nueva confirmación de correo"
+"Este enlace de confirmación de correo expiró o es inválido. Por favor<a "
+"href=\"%(email_url)s\"> solicitar una nueva confirmación de correo"
 
 #: pemors/templates/account/login.html:7 pemors/templates/account/login.html:11
 #: pemors/templates/account/login.html:56
@@ -141,11 +141,11 @@ msgstr "o"
 #: pemors/templates/account/login.html:41
 #, python-format
 msgid ""
-"If you have not created an account yet, then please <a href=\"%(signup_url)s"
-"\">sign up</a> first."
+"If you have not created an account yet, then please <a "
+"href=\"%(signup_url)s\">sign up</a> first."
 msgstr ""
-"Si no has creado una cuenta aún, epor favor <a href=\"%(signup_url)s"
-"\">registrate</a>primero"
+"Si no has creado una cuenta aún, epor favor <a "
+"href=\"%(signup_url)s\">registrate</a>primero"
 
 #: pemors/templates/account/login.html:55
 msgid "Forgot Password?"
@@ -153,7 +153,7 @@ msgstr "¿Olvidaste tu contraseña?"
 
 #: pemors/templates/account/logout.html:5
 #: pemors/templates/account/logout.html:8
-#: pemors/templates/account/logout.html:17 pemors/templates/base.html:49
+#: pemors/templates/account/logout.html:17 pemors/templates/base.html:53
 msgid "Sign Out"
 msgstr "Cerrar sesión"
 
@@ -233,7 +233,7 @@ msgid "Signup"
 msgstr "Registrarse"
 
 #: pemors/templates/account/signup.html:9
-#: pemors/templates/account/signup.html:19 pemors/templates/base.html:55
+#: pemors/templates/account/signup.html:19 pemors/templates/base.html:59
 msgid "Sign Up"
 msgstr "Registrarse"
 
@@ -302,19 +302,19 @@ msgstr ""
 "<strong>Nota:</strong> aún puedes <a href=\"%(email_url)s\">cambiar tu "
 "correoelectrónico</a>."
 
-#: pemors/templates/base.html:44
+#: pemors/templates/base.html:48
 msgid "Home"
 msgstr "Inicio"
 
-#: pemors/templates/base.html:45
+#: pemors/templates/base.html:49
 msgid "About"
 msgstr "Sobre"
 
-#: pemors/templates/base.html:47
+#: pemors/templates/base.html:51
 msgid "My Profile"
 msgstr "Mi Perfil"
 
-#: pemors/templates/base.html:56
+#: pemors/templates/base.html:60
 msgid "Log In"
 msgstr "Iniciar sesión"
 
@@ -553,3 +553,18 @@ msgstr "Nombre de usuario"
 #: pemors/users/views.py:33
 msgid "Information successfully updated"
 msgstr "Información correctamente actualizada"
+
+#, fuzzy
+#~| msgid "E-mail Addresses"
+#~ msgid "Email address"
+#~ msgstr "Direcciones de correo eletrónico"
+
+#, fuzzy
+#~| msgid "Primary"
+#~ msgid "mar"
+#~ msgstr "Principal"
+
+#, fuzzy
+#~| msgid "Primary"
+#~ msgid "may"
+#~ msgstr "Principal"
