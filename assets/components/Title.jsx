@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Rating} from "./Rating.jsx";
 
 export function Title({movie, callback}) {
@@ -18,7 +18,7 @@ export function Title({movie, callback}) {
                 movie.votes = data["imdbVotes"] === "N/A" ? 0 : data["imdbVotes"]
             })
     }
-    fetchData()
+    useEffect(() => fetchData())
 
     return <section className="text-gray-600 body-font overflow-hidden">
         <div className="container px-5 py-24 mx-auto">
