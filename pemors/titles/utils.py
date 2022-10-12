@@ -21,7 +21,7 @@ from pemors.users.models import User
 
 csv.field_size_limit(sys.maxsize)
 
-BATCH_SIZE = 1000
+BATCH_SIZE = 6000
 
 
 class Preprocesor:
