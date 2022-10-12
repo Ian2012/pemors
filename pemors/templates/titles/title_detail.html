@@ -8,7 +8,7 @@
   {% csrf_token %}
   <script>
     let titleid = '{{ title.id|safe }}';
-    fetch(`http://www.omdbapi.com/?i=${titleid}&apikey=6aad63ad`)
+    fetch(`https://www.omdbapi.com/?i=${titleid}&apikey=6aad63ad`)
       .then(response => {
         return response.json();
       })

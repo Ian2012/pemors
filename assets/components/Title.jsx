@@ -5,7 +5,7 @@ export function Title({movie, callback}) {
 
     const [poster, setPoster] = useState('')
     const fetchData = () => {
-        fetch(`http://www.omdbapi.com/?i=${movie.id}&apikey=6aad63ad`)
+        fetch(`https://www.omdbapi.com/?i=${movie.id}&apikey=6aad63ad`)
             .then(response => {
                 return response.json()
             })

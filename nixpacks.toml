@@ -35,7 +35,7 @@ cmds = [
     'npm ci',
     'npm run tailwind:install'
 ]
-dependsOn = ['setup']
+dependsOn = ['setup', 'install']
 cacheDirectories = ['/root/.npm']
 paths = ['/app/node_modules/.bin']
 

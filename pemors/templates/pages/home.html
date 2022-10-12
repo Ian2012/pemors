@@ -34,7 +34,7 @@
   {% for values in recommended_movies %}
     <script async>
 
-      fetch(`http://www.omdbapi.com/?i=${'{{ values.title.id|safe }}'}&apikey=6aad63ad`)
+      fetch(`https://www.omdbapi.com/?i=${'{{ values.title.id|safe }}'}&apikey=6aad63ad`)
         .then(response => {
           return response.json();
         })
