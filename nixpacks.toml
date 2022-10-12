@@ -11,6 +11,7 @@ nixPkgs = [
     'gcc',
     'nodejs-16_x',
     'npm-8_x',
+    'gettext'
 ]
 nixLibs = [
     'zlib',
@@ -59,6 +60,7 @@ dependsOn = [
 cmds = [
     'python manage.py migrate',
     'python manage.py train',
+    'python manage.py compilemessages -l es',
     'python manage.py collectstatic --noinput',
 ]
 
