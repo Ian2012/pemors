@@ -60,7 +60,7 @@ def user_personality_view(request):
         data = request.POST
         form = UserPersonalityForm(data=data)
         if form.is_valid():
-            calculate_user_personality(form, request.user)
+            calculate_user_personality_with_form(form, request.user)
             return redirect("home")
         else:
             return render(request, "users/personality.html", {"form": form})
@@ -69,7 +69,7 @@ def user_personality_view(request):
     return render(request, "users/personality.html", {"form": form})
 
 
-def calculate_user_personality(form, user):
+def calculate_user_personality_with_form(form, user):
     scores = [0 for _ in range(0, 5)]
     for i, questiondata in enumerate(QUESTIONS):
         answer = int(form.cleaned_data[f"question_{i}"])

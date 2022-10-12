@@ -127,5 +127,5 @@ class UserPersonalityForm(forms.Form):
                 choices=self.CHOICES,
                 label=question["question"],
                 widget=self.WIDGET,
-                initial=(2, ""),
+                initial=(3, ""),
             )

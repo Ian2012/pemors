@@ -11,3 +11,19 @@
   background-color: #f2dede;
   border-color: #eed3d7;
 }
+
+.input_question {
+  display: flex;
+  margin-left: 30px;
+}
+
+.number {
+  margin-left: 1rem;
+}
+
+div.mb-3 {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  white-space: nowrap;
+}

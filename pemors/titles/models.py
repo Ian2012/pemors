@@ -59,6 +59,9 @@ class Person(models.Model):
     death_year = models.IntegerField(null=True)
     profession = models.CharField(max_length=256)
 
+    def __str__(self):
+        return f"{self.primary_name} ({self.profession})"
+
 
 class KnownFor(models.Model):
     title = models.ForeignKey(to=Title, on_delete=models.CASCADE)

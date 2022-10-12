@@ -1,25 +1,45 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 {% load i18n %}
 
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-  <form id="personality_form" method="post" action="{% url 'users:personality' %}">
-    {{ form.errors }}
-    {% csrf_token %}
-    <span>{% trans 'How much do you agree with' %}</span>
-    <div>
-      <span class="number">1</span>
-      <span class="number">2</span>
-      <span class="number">3</span>
-      <span class="number">4</span>
-      <span class="number">5</span>
-    </div>
-    {{ form }}
-    <div class="">
-      <div class="">
-        <button type="submit" class="">Update</button>
+  <section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto">
+      <div class="text-center mb-16">
+        <h1 class="sm:text-3xl text-2xl font-medium text-center title-font text-gray-900 mb-4">Test de personalidad</h1>
+        <p class="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Usaremos esta información para recomendarte
+                                                                       películas acordes a tu personalidad. Esta
+                                                                       información no será compartida con
+                                                                       terceros</p>
+      </div>
+      <div class="w-full max-w-3xl mx-auto">
+        <form id="personality_form" method="post" action="{% url 'users:personality' %}"
+              class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          {% csrf_token %}
+          <div class="mb-4 flex justify-between">
+            <h2
+              class="font-bold title-font tracking-widest text-gray-900 mb-4 text-base text-center sm:text-left">{% trans 'How much do you agree with' %}</h2>
+            <div class="mr-2">
+              <span class="number mr-1">1</span>
+              <span class="number">2</span>
+              <span class="number">3</span>
+              <span class="number">4</span>
+              <span class="number">5</span>
+            </div>
+          </div>
+          {{ form|crispy }}
+          <div class="">
+            <button
+              type="submit"
+              class="flex mx-auto mt-16 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+              {% trans 'Predict personality' %}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-  </form>
+  </section>
+
 {% endblock %}
