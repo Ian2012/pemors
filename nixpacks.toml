@@ -22,7 +22,7 @@ nixOverlays = ['https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.g
 
 [phases.install]
 name = 'install'
-dependsOn = ['setup', 'install-front']
+dependsOn = ['install-front']
 cmds = [
     'python -m venv /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt',
 ]
