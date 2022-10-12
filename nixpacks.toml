@@ -22,7 +22,7 @@ nixOverlays = ['https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.g
 
 [phases.install]
 name = 'install'
-dependsOn = ['install-front']
+dependsOn = ['setup']
 cmds = [
     'python -m venv /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt',
 ]
@@ -35,14 +35,14 @@ cmds = [
     'npm ci',
     'npm run tailwind:install'
 ]
-dependsOn = ['setup', 'install']
+dependsOn = ['install']
 cacheDirectories = ['/root/.npm']
 paths = ['/app/node_modules/.bin']
 
 
 [phases.build]
 name = 'build'
-dependsOn = ['setup', 'install-front']
+dependsOn = ['install-front']
 cmds = [
     'npm run build',
     'npm run tailwind:build'
@@ -53,8 +53,6 @@ cacheDirectories = ['node_modules/.cache']
 [phases.release]
 name = 'release'
 dependsOn = [
-    'setup',
-    'install',
     'build',
 ]
 cmds = [
