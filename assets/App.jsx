@@ -32,7 +32,10 @@ export function App({movies}) {
     const onClick = () => {
         changeShow(prev => {
             if (currentMovieIndex >= moviesLength - 1) {
-                window.location.pathname= "/"
+                setTimeout(() => {
+                    window.location.pathname= "/"
+                }, 5000)
+
                 return prev
             }
 

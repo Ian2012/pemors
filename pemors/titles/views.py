@@ -3,6 +3,8 @@ import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, TemplateView
 
 from pemors.titles.api.serializers import TitleSerializer
@@ -11,6 +13,7 @@ from pemors.titles.models import Title, UserRating
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(cache_page(60 * 24), name="dispatch")
 class TitleDetailView(LoginRequiredMixin, DetailView):
     model = Title
     slug_field = "id"
@@ -39,7 +42,7 @@ class ColdStart(LoginRequiredMixin, TemplateView):
         title_counter = sorted(title_counter, key=lambda d: d["total"], reverse=True)
         titles = [title["title_id"] for title in title_counter]
         titles = random.choices(titles, k=10)
-        random_items = Title.objects.filter(id__in=titles)
+        random_items = Title.objects.filter(id__in=titles).select_related("rating")
 
         context_data["movies"] = TitleSerializer(random_items, many=True).data
 

@@ -6,7 +6,7 @@ from django.db.models import Count
 from surprise import Dataset, Reader
 
 from pemors.titles.models import Title, UserRating
-from pemors.users.models import Profile, User
+from pemors.users.models import User
 
 # from os import path
 
@@ -50,9 +50,17 @@ class Recommender:
 
         predictions = [algo.predict(user.id, iid) for iid in available_titles]
         recommendations = self._get_recommendation(predictions)[0:k]
+        titles_id = [recommendation["title"] for recommendation in recommendations]
+
+        titles = (
+            Title.objects.filter(id__in=titles_id)
+            .select_related("rating")
+            .prefetch_related("genres__genre")
+            .all()
+        )
 
         for i, recommendation in enumerate(recommendations):
-            title = Title.objects.get(id=recommendation["title"])
+            title = titles.get(id=recommendation["title"])
             recommendations[i]["title"] = title
 
         if use_genre_preferences:
@@ -120,7 +128,7 @@ class Recommender:
         return recommendations
 
     def sort_recommendations_by_genre_preferences(self, recommendations, user):
-        profile = Profile.objects.get(user=user)
+        profile = user.profile
         user_profile = [profile.opn, profile.con, profile.ext, profile.agr, profile.neu]
         user_genre_preferences = {}
 

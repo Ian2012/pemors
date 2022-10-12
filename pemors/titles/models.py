@@ -94,3 +94,8 @@ class UserRating(models.Model):
 
     class Meta:
         unique_together = ["user", "title"]
+        indexes = [
+            models.Index(fields=("user", "title")),
+            models.Index(fields=("user",)),
+            models.Index(fields=("title",)),
+        ]
