@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import CharField
+from django.db.models import CharField, Q
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -33,7 +33,9 @@ class User(AbstractUser):
 
     class Meta:
         indexes = [
-            models.Index(fields=["rating_counter"]),
+            models.Index(
+                fields=["rating_counter"], condition=Q(rating_counter__gte=10)
+            ),
             models.Index(fields=["username"]),
         ]
 
