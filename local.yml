@@ -3,6 +3,7 @@ version: '3'
 volumes:
   pemors_local_postgres_data: {}
   pemors_local_postgres_data_backups: {}
+  redisdata: {}
 
 services:
   django:
@@ -14,6 +15,7 @@ services:
     platform: linux/x86_64
     depends_on:
       - postgres
+      - redis
     volumes:
       - .:/app:z
     env_file:
@@ -55,3 +57,10 @@ services:
       - pemors_local_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
+
+  redis:
+    restart: always
+    image: redis:latest
+    container_name: pemors_local_redis
+    volumes:
+      - redisdata:/data
