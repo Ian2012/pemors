@@ -111,12 +111,11 @@ class Recommender:
         return available_titles
 
     def _get_recommendation(self, predictions):
-        recommendations = [
+        recommendations = (
             {"title": iid, "rating": Decimal(est)}
             for uid, iid, true_r, est, _ in predictions
-        ]
-        recommendations.sort(key=lambda x: x["rating"], reverse=True)
-        return recommendations
+        )
+        return sorted(recommendations, key=lambda d: d["rating"])
 
     def sort_recommendations_by_genre_preferences(self, recommendations, user):
         profile = user.profile
