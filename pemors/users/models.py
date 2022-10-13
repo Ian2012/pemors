@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from picklefield.fields import PickledObjectField
 
 
 class User(AbstractUser):
@@ -56,4 +55,3 @@ class Profile(models.Model):
     ext = models.DecimalField(default=0, decimal_places=3, max_digits=4)
     neu = models.DecimalField(default=0, decimal_places=3, max_digits=4)
     opn = models.DecimalField(default=0, decimal_places=3, max_digits=4)
-    recommender = PickledObjectField(null=True)
