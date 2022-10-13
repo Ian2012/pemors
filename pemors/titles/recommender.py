@@ -2,11 +2,10 @@ from decimal import Decimal
 
 import pandas as pd
 import surprise
-from django.db.models import Count
 from surprise import Dataset, Reader
 
 from pemors.titles.models import Title, UserRating
-from pemors.users.models import User
+from pemors.users.models import Profile, User
 
 # from os import path
 
@@ -42,15 +41,18 @@ class Recommender:
     dataset = None
 
     def recommend(self, user: User, k=20, use_genre_preferences=True):
-        if user.profile.recommender is None:
+        recommender_exists = Profile.objects.filter(
+            user_id=user.id, recommender__isnull=False
+        ).exists()
+        if not recommender_exists:
             algo, available_titles = self._train(user)
         else:
-            available_titles = self._load_available_titles(user)
+            available_titles = self._load_available_titles()
             algo = user.profile.recommender
 
-        predictions = [algo.predict(user.id, iid) for iid in available_titles]
+        predictions = (algo.predict(user.id, title.id) for title in available_titles)
         recommendations = self._get_recommendation(predictions)[0:k]
-        titles_id = [recommendation["title"] for recommendation in recommendations]
+        titles_id = (recommendation["title"] for recommendation in recommendations)
 
         titles = (
             Title.objects.filter(id__in=titles_id)
@@ -79,15 +81,8 @@ class Recommender:
         return algo, available_titles
 
     def _load_data(self, user):
-        users = (
-            UserRating.objects.values("user")
-            .annotate(total=Count("user"))
-            .filter(total__gte=10)
-            .values("user")
-        )
-
         dataframe = pd.DataFrame(
-            list(UserRating.objects.filter(user__in=users).values())
+            list(UserRating.objects.filter(user__rating_counter__gte=10).values())
         )
 
         dataset = Dataset.load_from_df(
@@ -102,28 +97,17 @@ class Recommender:
         ]
         return dataset, available_titles
 
-    def _load_available_titles(self, user):
-        users = (
-            UserRating.objects.values("user")
-            .annotate(total=Count("user"))
-            .filter(total__gte=10)
-            .values("user")
-        )
-        available_titles = (
-            UserRating.objects.filter(user__in=users)
-            .exclude(user=user)
-            .distinct("title_id")
-            .values_list("title_id", flat=True)
-        )
+    def _load_available_titles(self):
+        users = User.objects.filter(rating_counter__gte=10).prefetch_related("ratings")
+        user_ratings = UserRating.objects.filter(user_id__in=users).values("title_id")
+        available_titles = Title.objects.filter(id__in=user_ratings)
         return available_titles
 
     def _get_recommendation(self, predictions):
-        recommendations = []
-        for uid, iid, true_r, est, _ in predictions:
-            recommendations.append(
-                {"title": iid, "rating": Decimal(est)},
-            )
-
+        recommendations = [
+            {"title": iid, "rating": Decimal(est)}
+            for uid, iid, true_r, est, _ in predictions
+        ]
         recommendations.sort(key=lambda x: x["rating"], reverse=True)
         return recommendations
 

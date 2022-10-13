@@ -1,5 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 
 from pemors.users.models import User
 
@@ -84,9 +86,7 @@ class Crew(models.Model):
 
 
 class UserRating(models.Model):
-    user = models.ForeignKey(
-        to=User, related_name="ratings", on_delete=models.CASCADE, null=True
-    )
+    user = models.ForeignKey(to=User, related_name="ratings", on_delete=models.CASCADE)
     title = models.ForeignKey(
         to=Title, related_name="ratings", on_delete=models.CASCADE
     )
@@ -99,3 +99,20 @@ class UserRating(models.Model):
             models.Index(fields=("user",)),
             models.Index(fields=("title",)),
         ]
+
+
+@receiver(post_save, sender=UserRating)
+def user_rating_created_counter_signal(sender, instance, created, **kwargs):
+    if created:
+        instance.user.rating_counter = UserRating.objects.filter(
+            user_id=instance.user.id
+        ).count()
+        instance.user.save()
+
+
+@receiver(post_delete, sender=UserRating)
+def user_rating_deleted_counter_signal(sender, instance, **kwargs):
+    instance.user.rating_counter = UserRating.objects.filter(
+        user_id=instance.user.id
+    ).count()
+    instance.user.save()

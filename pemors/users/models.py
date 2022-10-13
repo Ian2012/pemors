@@ -18,6 +18,7 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
+    rating_counter = models.IntegerField(default=0)
 
     def get_absolute_url(self):
         """Get url for user's detail view.
@@ -30,6 +31,12 @@ class User(AbstractUser):
 
     def is_syntethic_user(self):
         return self.username.startswith(settings.SYNTETHIC_USER_PATTERN)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["rating_counter"]),
+            models.Index(fields=["username"]),
+        ]
 
 
 class Status(models.Model):
