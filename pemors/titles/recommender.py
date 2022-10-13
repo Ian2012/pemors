@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 import pandas as pd
@@ -7,8 +8,7 @@ from surprise import Dataset, Reader
 from pemors.titles.models import Title, UserRating
 from pemors.users.models import Profile, User
 
-# from os import path
-
+logger = logging.getLogger(__name__)
 
 USER_GENRE_PREFERENCES = {
     "Action": [3.87, 3.45, 3.57, 3.58, 2.72],
@@ -50,6 +50,7 @@ class Recommender:
             available_titles = self._load_available_titles()
             algo = user.profile.recommender
 
+        logger.info(f"Predicting movies for user {user.email}")
         predictions = (algo.predict(user.id, title.id) for title in available_titles)
         recommendations = self._get_recommendation(predictions)[0:k]
         titles_id = (recommendation["title"] for recommendation in recommendations)
@@ -71,9 +72,12 @@ class Recommender:
         return recommendations
 
     def _train(self, user):
+        logger.info(f"Training recommender for user {user.email}")
         dataset, available_titles = self._load_data(user)
+        logger.info(f"Building full trainset for user {user.email}")
         trainset = dataset.build_full_trainset()
         algo = surprise.SVD()
+        logger.info(f"Fitting SVD for user {user.email}")
         algo.fit(trainset)
         user.profile.recommender = algo
         user.profile.save()
@@ -81,23 +85,24 @@ class Recommender:
         return algo, available_titles
 
     def _load_data(self, user):
+        logger.info("Loading available UserRating")
         dataframe = pd.DataFrame(
             list(UserRating.objects.filter(user__rating_counter__gte=10).values())
         )
-
+        logger.info("Creating surprise Dataset")
         dataset = Dataset.load_from_df(
             dataframe[["user_id", "title_id", "rating"]],
             Reader(rating_scale=(1, 10)),
         )
-
         rated_titles = user.ratings.values_list("title_id", flat=True)
         available_titles = dataframe["title_id"].unique()
-        available_titles = [
-            title for title in available_titles if title not in rated_titles
-        ]
+        available_titles = Title.objects.filter(id__in=available_titles).exclude(
+            id__in=rated_titles
+        )
         return dataset, available_titles
 
     def _load_available_titles(self):
+        logger.info("Loading available titles")
         users = User.objects.filter(rating_counter__gte=10).prefetch_related("ratings")
         user_ratings = UserRating.objects.filter(user_id__in=users).values("title_id")
         available_titles = Title.objects.filter(id__in=user_ratings)
@@ -122,8 +127,6 @@ class Recommender:
                 for user_trait, genre_trait in zip(user_profile, values)
             )
             user_genre_preferences[genre] = 10 - distance
-
-        print(user_genre_preferences)
 
         for i, recommendation in enumerate(recommendations):
             recommendations[i]["genres"] = [
