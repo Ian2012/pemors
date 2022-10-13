@@ -48,6 +48,7 @@ class Recommender:
             algo, available_titles = self._train(user)
         else:
             available_titles = self._load_available_titles()
+            logger.info(f"Loading recommender for user {user.email}")
             algo = user.profile.recommender
 
         logger.info(f"Predicting movies for user {user.email}")
@@ -55,16 +56,17 @@ class Recommender:
         recommendations = self._get_recommendation(predictions)[0:k]
         titles_id = (recommendation["title"] for recommendation in recommendations)
 
-        titles = (
+        titles = list(
             Title.objects.filter(id__in=titles_id)
             .select_related("rating")
             .prefetch_related("genres__genre")
             .all()
         )
 
+        titles = {title.id: title for title in titles}
+
         for i, recommendation in enumerate(recommendations):
-            title = titles.get(id=recommendation["title"])
-            recommendations[i]["title"] = title
+            recommendations[i]["title"] = titles[recommendation["title"]]
 
         if use_genre_preferences:
             return self.sort_recommendations_by_genre_preferences(recommendations, user)
