@@ -34,7 +34,9 @@ class User(AbstractUser):
     class Meta:
         indexes = [
             models.Index(
-                fields=["rating_counter"], condition=Q(rating_counter__gte=10)
+                fields=["rating_counter"],
+                condition=Q(rating_counter__gte=10),
+                name="$(app_label)s_$(class)s_valid",
             ),
             models.Index(fields=["username"]),
         ]
