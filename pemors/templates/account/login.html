@@ -2,58 +2,69 @@
 
 {% load i18n %}
 {% load account socialaccount %}
-{% load crispy_forms_tags %}
+{% load tailwind_filters %}
 
 {% block head_title %}{% translate "Sign In" %}{% endblock %}
 
 {% block inner %}
-
-  <h1>{% translate "Sign In" %}</h1>
-
   {% get_providers as socialaccount_providers %}
 
-  {% if socialaccount_providers %}
-    <p>
-      {% translate "Please sign in with one of your existing third party accounts:" %}
-      {% if ACCOUNT_ALLOW_REGISTRATION %}
-        {% blocktranslate trimmed %}
-          Or, <a href="{{ signup_url }}">sign up</a>
-          for a {{ site_name }} account and sign in below:
-        {% endblocktranslate %}
-      {% endif %}
-    </p>
+  <section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+      <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+        <h1 class="title-font font-medium text-3xl text-gray-900">
+          {% translate "Please sign in with one of your existing third party accounts:" %}
+          {% if ACCOUNT_ALLOW_REGISTRATION %}
+            {% blocktranslate trimmed %}
+              Or, <a href="{{ signup_url }}">sign up</a>
+              for a {{ site_name }} account and sign in below:
+            {% endblocktranslate %}
+          {% endif %}
+        </h1>
+        <p class="leading-relaxed mt-4">
+          {% if socialaccount_providers %}
 
-    <div class="socialaccount_ballot">
+            <div class="socialaccount_ballot">
+              <ul class="socialaccount_providers">
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+              </ul>
+            </div>
+            {% include "socialaccount/snippets/login_extra.html" %}
 
-      <ul class="socialaccount_providers">
-        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-      </ul>
+          {% else %}
+            {% if ACCOUNT_ALLOW_REGISTRATION %}
+              <p>
+                {% blocktranslate trimmed %}
+                  If you have not created an account yet, then please
+                  <a href="{{ signup_url }}">sign up</a> first.
+                {% endblocktranslate %}
+              </p>
+            {% endif %}
+          {% endif %}
+        </p>
+      </div>
+      <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+        <h2 class="text-gray-900 text-lg font-medium title-font mb-5">{% translate "Sign In" %}</h2>
+        <form class="login" method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
 
-      <div class="login-or">{% translate "or" %}</div>
-
+          <button
+            class="w-full text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+            type="submit">{% translate "Sign In" %}</button>
+        </form>
+        <p class="text-xs text-gray-500 mt-3">
+        <div>
+          <a class="button secondaryAction align-center"
+             href="{% url 'account_reset_password' %}">
+            {% translate "Forgot Password?" %}
+          </a>
+        </div>
+        </p>
+      </div>
     </div>
-
-    {% include "socialaccount/snippets/login_extra.html" %}
-
-  {% else %}
-    {% if ACCOUNT_ALLOW_REGISTRATION %}
-      <p>
-        {% blocktranslate trimmed %}
-          If you have not created an account yet, then please
-          <a href="{{ signup_url }}">sign up</a> first.
-        {% endblocktranslate %}
-      </p>
-    {% endif %}
-  {% endif %}
-
-  <form class="login" method="POST" action="{% url 'account_login' %}">
-    {% csrf_token %}
-    {{ form|crispy }}
-    {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-    {% endif %}
-    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% translate "Forgot Password?" %}</a>
-    <button class="primaryAction btn btn-primary" type="submit">{% translate "Sign In" %}</button>
-  </form>
-
+  </section>
 {% endblock %}

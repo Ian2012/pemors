@@ -21,9 +21,10 @@
   margin-left: 1rem;
 }
 
-div.mb-3 {
-  display: flex;
-  width: 100%;
-  justify-content: end;
-  white-space: nowrap;
+.socialaccount_provider {
+  font-size: 1.6rem;
+}
+
+.socialaccount_providers{
+  text-align: center;
 }
