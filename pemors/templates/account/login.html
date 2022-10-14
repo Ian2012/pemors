@@ -9,43 +9,30 @@
 {% block inner %}
   {% get_providers as socialaccount_providers %}
 
-  <section class="text-gray-600 body-font">
+  <section class="text-white-600 body-font">
     <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
       <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
-        <h1 class="title-font font-medium text-3xl text-gray-900">
+        <h1 class="title-font font-medium text-3xl text-white">
           {% translate "Please sign in with one of your existing third party accounts:" %}
           {% if ACCOUNT_ALLOW_REGISTRATION %}
             {% blocktranslate trimmed %}
-              Or, <a href="{{ signup_url }}">sign up</a>
+              Or, <a href="{{ signup_url }}" class="text-blue-600">sign up</a>
               for a {{ site_name }} account and sign in below:
             {% endblocktranslate %}
           {% endif %}
         </h1>
-        <p class="leading-relaxed mt-4">
           {% if socialaccount_providers %}
-
-            <div class="socialaccount_ballot">
+            <div class="socialaccount_ballot leading-relaxed mt-4 text-blue-600">
               <ul class="socialaccount_providers">
                 {% include "socialaccount/snippets/provider_list.html" with process="login" %}
               </ul>
             </div>
             {% include "socialaccount/snippets/login_extra.html" %}
-
-          {% else %}
-            {% if ACCOUNT_ALLOW_REGISTRATION %}
-              <p>
-                {% blocktranslate trimmed %}
-                  If you have not created an account yet, then please
-                  <a href="{{ signup_url }}">sign up</a> first.
-                {% endblocktranslate %}
-              </p>
-            {% endif %}
           {% endif %}
-        </p>
       </div>
-      <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
-        <h2 class="text-gray-900 text-lg font-medium title-font mb-5">{% translate "Sign In" %}</h2>
-        <form class="login" method="POST" action="{% url 'account_login' %}">
+      <div class="lg:w-2/6 md:w-1/2 bg-zinc-800 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+        <h2 class="text-white text-lg font-medium title-font mb-5">{% translate "Sign In" %}</h2>
+        <form class="login text-white" method="POST" action="{% url 'account_login' %}">
           {% csrf_token %}
           {{ form|crispy }}
           {% if redirect_field_value %}
@@ -58,7 +45,7 @@
         </form>
         <p class="text-xs text-gray-500 mt-3">
         <div>
-          <a class="button secondaryAction align-center"
+          <a class="button secondaryAction align-center text-blue-600"
              href="{% url 'account_reset_password' %}">
             {% translate "Forgot Password?" %}
           </a>

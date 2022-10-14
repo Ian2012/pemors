@@ -8,7 +8,7 @@
     {% endif %}
 
     <div class="flex{% if field_class %} {{ field_class }}{% endif %}">
-        {% tailwind_field field "class" "border border-gray-300 rounded-lg rounded-r-none px-4 py-2 w-full focus:outline-none text-gray-700 border-r-0 leading-normal" %}
+        {% tailwind_field field "class" "border border-gray-300 rounded-lg rounded-r-none px-4 py-2 w-full focus:outline-none text-white border-r-0 leading-normal" %}
             <span class="{% if field.errors %}border-red-500 border-r-0 {% else %}border-gray-300 {% endif %}border rounded-lg rounded-l-none bg-gray-200 text-gray-800 flex items-center">{{ buttons|safe }}</span>
         {% include 'tailwind/layout/help_text_and_errors.html' %}
     </div>

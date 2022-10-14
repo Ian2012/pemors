@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-14 01:30+0000\n"
+"POT-Creation-Date: 2022-10-14 02:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,8 +116,8 @@ msgstr ""
 "Este enlace de confirmación de correo expiró o es inválido. Por favor<a href="
 "\"%(email_url)s\"> solicitar una nueva confirmación de correo"
 
-#: pemors/templates/account/login.html:7 pemors/templates/account/login.html:47
-#: pemors/templates/account/login.html:57
+#: pemors/templates/account/login.html:7 pemors/templates/account/login.html:34
+#: pemors/templates/account/login.html:44
 msgid "Sign In"
 msgstr "Iniciar sesión"
 
@@ -128,22 +128,13 @@ msgstr "Por favor iniciar sesión con una de tus cuentas existentes"
 #: pemors/templates/account/login.html:18
 #, python-format
 msgid ""
-"Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and "
-"sign in below:"
+"Or, <a href=\"%(signup_url)s\" class=\"text-blue-600\">sign up</a> for a "
+"%(site_name)s account and sign in below:"
 msgstr ""
 "O, <a href=\"%(signup_url)s\">registrate</a> por una %(site_name)s cuenta e "
 "inicia sesión aquí:"
 
-#: pemors/templates/account/login.html:37
-#, python-format
-msgid ""
-"If you have not created an account yet, then please <a href=\"%(signup_url)s"
-"\">sign up</a> first."
-msgstr ""
-"Si no has creado una cuenta aún, epor favor <a href=\"%(signup_url)s"
-"\">registrate</a>primero"
-
-#: pemors/templates/account/login.html:63
+#: pemors/templates/account/login.html:50
 msgid "Forgot Password?"
 msgstr "¿Olvidaste tu contraseña?"
 
@@ -553,6 +544,17 @@ msgstr "Nombre de usuario"
 #: pemors/users/views.py:33
 msgid "Information successfully updated"
 msgstr "Información correctamente actualizada"
+
+#, fuzzy, python-format
+#~| msgid ""
+#~| "Already have an account? Then please <a href=\"%(login_url)s\">sign in</"
+#~| "a>."
+#~ msgid ""
+#~ "If you have not created an account yet, then please <a class=\"text-blue "
+#~ "font-bold\" href=\"%(signup_url)s\">sign up</a> first."
+#~ msgstr ""
+#~ "¿Ya tienes una cuenta? Por favor <a href=\"%(login_url)s\">inicia sesión</"
+#~ "a>."
 
 #~ msgid "or"
 #~ msgstr "o"
