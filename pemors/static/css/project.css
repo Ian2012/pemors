@@ -32,3 +32,21 @@
 .block.text-gray-700.text-sm.font-bold.mb-2{
   color: white;
 }
+
+#personality_form > div.mb-3{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+#personality_form > div > div.mb-3{
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  white-space: nowrap;
+}
+
+#personality_form > div > div.mb-3 > label {
+  width: max-content;
+}
