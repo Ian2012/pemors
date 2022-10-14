@@ -58,8 +58,8 @@ dependsOn = [
 cmds = [
     'python manage.py migrate',
     'python manage.py train',
-    'python manage.py compilemessages -l es',
     'python manage.py collectstatic --noinput',
+    'python manage.py compilemessages -l es',
 ]
 
 [start]
