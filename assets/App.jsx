@@ -1,6 +1,6 @@
 import {Transition} from "react-transition-group";
 import {Title} from "./components/Title.jsx";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 
 const Div = styled.div`
@@ -22,25 +22,26 @@ const Div = styled.div`
   }
 `;
 
-export function App({movies}) {
+export function App({movies, rating_counter}) {
 
     let currentMovieIndex = 0;
-    let moviesLength = movies.length;
 
-    const [show, changeShow] = useState(true);
-
+    const [show, changeShow] = useState(false);
+    const [leftMovies, changeLeftMovies] = useState(10 - rating_counter)
     const onClick = () => {
         changeShow(prev => {
-            if (currentMovieIndex >= moviesLength - 1) {
+            if (leftMovies === 0) {
                 setTimeout(() => {
-                    window.location.pathname= "/"
+                    window.location.pathname = "/"
                 }, 5000)
-
                 return prev
             }
 
             if (prev) {
                 currentMovieIndex += 1
+                changeLeftMovies(currentCounter => {
+                    return currentCounter - 1
+                })
             }
 
             setTimeout(() => {
@@ -51,16 +52,20 @@ export function App({movies}) {
         });
     };
 
+
     const [title, changeTitle] = useState(<Title movie={movies[currentMovieIndex]} callback={onClick}/>);
 
-    return (
-        <div>
-            <button onClick={onClick}></button>
-            <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
-                {state => {
-                    return <Div className={state}>{title}</Div>;
-                }}
-            </Transition>
-        </div>
-    );
+    useEffect(() => changeShow(true))
+
+    return (<div>
+
+        <button onClick={onClick}></button>
+        <h1 className="pt-3 text-center text-white text-3xl title-font font-medium mb-1">Faltan {leftMovies} películas
+                                                                                         por calificar</h1>
+        <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
+            {state => {
+                return <Div className={state}>{title}</Div>;
+            }}
+        </Transition>
+    </div>);
 }
