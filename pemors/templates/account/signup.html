@@ -1,22 +1,47 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
+{% load account socialaccount %}
 {% load tailwind_filters %}
 
 {% block head_title %}{% translate "Signup" %}{% endblock %}
 
 {% block inner %}
-  <h1>{% translate "Sign Up" %}</h1>
+  {% get_providers as socialaccount_providers %}
+  <section class="text-white-600 body-font">
+    <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+      <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
 
-  <p>{% blocktranslate %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktranslate %}</p>
+        <h1 class="title-font font-medium text-3xl text-white">
+          <p class="text-white">{% blocktranslate %}Already have an account? Then please
+            <a class="text-blue-600" href="{{ login_url }}">sign in</a>
+                                                    .{% endblocktranslate %}</p>
+          <p class="pt-3">{% translate "You can register with one of your third part accounts:" %}</p>
+        </h1>
+        {% if socialaccount_providers %}
+          <div class="socialaccount_ballot leading-relaxed mt-4 text-blue-600">
+            <ul class="socialaccount_providers">
+              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+          </div>
+          {% include "socialaccount/snippets/login_extra.html" %}
+        {% endif %}
+      </div>
+      <div class="lg:w-2/6 md:w-1/2 bg-zinc-800 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+        <h2 class="text-white text-lg font-medium title-font mb-5">{% translate "Sign Up" %}</h2>
+        <form id="signup_form" class="signup login text-white" method="POST" action="{% url 'account_signup' %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
 
-  <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-    {% csrf_token %}
-    {{ form|crispy }}
-    {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-    {% endif %}
-    <button class="btn btn-primary" type="submit">{% translate "Sign Up" %} &raquo;</button>
-  </form>
+          <button
+            class="mt-6 w-full text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+            type="submit">{% translate "Sign Up" %}</button>
+        </form>
+      </div>
+    </div>
+  </section>
 
 {% endblock %}

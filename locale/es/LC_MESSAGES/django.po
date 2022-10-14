@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-14 02:11+0000\n"
+"POT-Creation-Date: 2022-10-14 02:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -215,21 +215,30 @@ msgstr "Tu contraseña ha cambiado"
 msgid "Set Password"
 msgstr "Configurar contraseña"
 
-#: pemors/templates/account/signup.html:6
+#: pemors/templates/account/signup.html:7
 msgid "Signup"
 msgstr "Registrarse"
 
-#: pemors/templates/account/signup.html:9
-#: pemors/templates/account/signup.html:19 pemors/templates/base.html:59
-msgid "Sign Up"
-msgstr "Registrarse"
-
-#: pemors/templates/account/signup.html:11
+#: pemors/templates/account/signup.html:16
 #, python-format
 msgid ""
-"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+"Already have an account? Then please\n"
+"            <a class=\"text-blue-600\" href=\"%(login_url)s\">sign in</a>\n"
+"                                                    ."
 msgstr ""
-"¿Ya tienes una cuenta? Por favor <a href=\"%(login_url)s\">inicia sesión</a>."
+"¿Ya tienes una cuenta? Por favor\n"
+"            <a class=\"text-blue-600\" href=\"%(login_url)s\">inicia sesión</"
+"a>\n"
+"                                                    ."
+
+#: pemors/templates/account/signup.html:19
+msgid "You can register with one of your third part accounts:"
+msgstr "Te puedes registrar con una de las siguientes cuentas de terceros:"
+
+#: pemors/templates/account/signup.html:31
+#: pemors/templates/account/signup.html:41 pemors/templates/base.html:59
+msgid "Sign Up"
+msgstr "Registrarse"
 
 #: pemors/templates/account/signup_closed.html:5
 #: pemors/templates/account/signup_closed.html:8
