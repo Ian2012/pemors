@@ -8,7 +8,7 @@ from pemors.titles.recommender import Recommender
 logger = logging.getLogger(__name__)
 
 
-class HomeView(TemplateView, LoginRequiredMixin):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "pages/home.html"
     movie_recommender = Recommender()
 
