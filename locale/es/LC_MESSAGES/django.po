@@ -388,7 +388,7 @@ msgstr "Tengo dificultades entendiendo ideas abstractas."
 
 #: pemors/users/forms.py:25
 msgid "Feel comfortable around people."
-msgstr "Me siento cómodop alrededor de personas."
+msgstr "Me siento cómodo alrededor de personas."
 
 #: pemors/users/forms.py:26
 msgid "Insult people."
@@ -408,11 +408,11 @@ msgstr "Tengo una imagicación vívida"
 
 #: pemors/users/forms.py:30
 msgid "Keep in the background."
-msgstr "Mantengo en el fondo."
+msgstr "Mantengo en segundo plano."
 
 #: pemors/users/forms.py:31
 msgid "Sympathize with others' feelings."
-msgstr "Empatizo con los sentimientos de otros"
+msgstr "Empatizo con los sentimientos de otros."
 
 #: pemors/users/forms.py:32
 msgid "Make a mess of things."
@@ -420,7 +420,7 @@ msgstr "Hago un lío de las cosas."
 
 #: pemors/users/forms.py:33
 msgid "Seldom feel blue."
-msgstr "Rara vez me siento triste"
+msgstr "Rara vez me siento triste."
 
 #: pemors/users/forms.py:34
 msgid "Am not interested in abstract ideas."
@@ -460,15 +460,15 @@ msgstr "A menudo se olvida de poner las cosas en su sitio."
 
 #: pemors/users/forms.py:51
 msgid "Get upset easily."
-msgstr "Me molesto fácilmente"
+msgstr "Me molesto fácilmente."
 
 #: pemors/users/forms.py:52
 msgid "Do not have a good imagination."
-msgstr "No tengo una buena imaginación"
+msgstr "No tengo una buena imaginación."
 
 #: pemors/users/forms.py:54
 msgid "Talk to a lot of different people at parties."
-msgstr "Hablo con mucha gente diferente en las fiestas. "
+msgstr "Hablo con mucha gente diferente en las fiestas."
 
 #: pemors/users/forms.py:58
 msgid "Am not really interested in others."
@@ -508,11 +508,11 @@ msgstr "Uso palabras díficiles."
 
 #: pemors/users/forms.py:68
 msgid "Don't mind being the center of attention."
-msgstr "No me importa ser el centro de atención"
+msgstr "No me importa ser el centro de atención."
 
 #: pemors/users/forms.py:72
 msgid "Feel others' emotions."
-msgstr "Siento las emociones de otros"
+msgstr "Siento las emociones de otros."
 
 #: pemors/users/forms.py:73
 msgid "Follow a schedule."
@@ -520,11 +520,11 @@ msgstr "Sigo un horario."
 
 #: pemors/users/forms.py:74
 msgid "Get irritated easily."
-msgstr "Me irrito fácilmente"
+msgstr "Me irrito fácilmente."
 
 #: pemors/users/forms.py:75
 msgid "Spend time reflecting on things."
-msgstr "Dedico tiempo a reflexionar sobre las cosas"
+msgstr "Dedico tiempo a reflexionar sobre las cosas."
 
 #: pemors/users/forms.py:76
 msgid "Am quiet around strangers."
