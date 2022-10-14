@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-12 19:36+0000\n"
+"POT-Creation-Date: 2022-10-14 00:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -326,7 +326,7 @@ msgstr "Películas recomendadas"
 msgid "How much do you agree with"
 msgstr "¿Que tanto estás de acuerdo con?"
 
-#: pemors/templates/users/personality.html:38
+#: pemors/templates/users/personality.html:37
 msgid "Predict personality"
 msgstr "Predecir personalidad"
 
@@ -550,7 +550,7 @@ msgstr "Estoy lleno de ideas."
 msgid "This username has already been taken."
 msgstr "Este nombre de usuario ya ha sido tomado."
 
-#: pemors/users/models.py:18
+#: pemors/users/models.py:17
 msgid "Name of User"
 msgstr "Nombre de usuario"
 
