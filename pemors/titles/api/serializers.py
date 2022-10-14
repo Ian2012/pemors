@@ -6,6 +6,9 @@ from pemors.titles.models import Title, UserRating
 
 class UserRatingSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=CurrentUserDefault())
+    rating_counter = serializers.IntegerField(
+        source="user.rating_counter", read_only=True
+    )
 
     class Meta:
         model = UserRating
