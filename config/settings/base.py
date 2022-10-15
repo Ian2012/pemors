@@ -334,3 +334,5 @@ SPECTACULAR_SETTINGS = {
 # Your stuff...
 # ------------------------------------------------------------------------------
 SYNTETHIC_USER_PATTERN = "SyntethicUser"
+
+USER_CACHE_KEY = "recommender_{}"

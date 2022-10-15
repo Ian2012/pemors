@@ -39,9 +39,9 @@ class CheckUserProfileMiddleware:
         if count < 10:
             excluded_paths = [
                 reverse("account_logout"),
-                reverse("users:personality"),
                 reverse("titles:coldstart"),
                 reverse("titles_api:user_rating-list"),
+                reverse("titles_api:train"),
             ]
             if request.path not in excluded_paths:
                 logger.debug(f"User {request.user.email} in coldstart")

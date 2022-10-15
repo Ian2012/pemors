@@ -3,6 +3,7 @@ from decimal import Decimal
 
 import pandas as pd
 import surprise
+from django.conf import settings
 from django.core.cache import cache
 from surprise import Dataset, Reader
 
@@ -35,7 +36,6 @@ USER_GENRE_PREFERENCES = {
     "Thriller": [3.85, 3.54, 3.51, 3.59, 2.76],
     "War": [3.82, 3.51, 3.49, 3.50, 2.71],
 }
-USER_CACHE_KEY = "recommender_{}"
 
 
 class Recommender:
@@ -43,10 +43,14 @@ class Recommender:
     dataset = None
 
     def recommend(self, user: User, k=20, use_genre_preferences=True):
-        algo = cache.get(USER_CACHE_KEY.format(user.id))
+        algo = cache.get(settings.USER_CACHE_KEY.format(user.id))
         if not algo:
             algo, available_titles = self._train(user)
-            cache.set(USER_CACHE_KEY.format(user.id), algo, timeout=60 * 60 * 24 * 360)
+            cache.set(
+                settings.USER_CACHE_KEY.format(user.id),
+                algo,
+                timeout=60 * 60 * 24 * 360,
+            )
         else:
             available_titles = self._load_available_titles()
             logger.info(f"Loading recommender for user {user.email}")

@@ -2,6 +2,7 @@ import {Transition} from "react-transition-group";
 import {Title} from "./components/Title.jsx";
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Div = styled.div`
   transition: 0.2s;
@@ -27,15 +28,34 @@ export function App({movies, rating_counter}) {
     let currentMovieIndex = 0;
 
     const [show, changeShow] = useState(false);
+    const [showError, changeShowErrror] = useState(false)
+    const [showLoading, changeShowLoading] = useState(false)
     const [leftMovies, changeLeftMovies] = useState(10 - rating_counter)
+
+    const triggerTraining = () => {
+        changeShowLoading(true)
+        fetch('/api/titles/train', {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json;charset=UTF-8",
+                "X-CSRFToken": csrftoken
+            },
+            mode: 'same-origin'
+        })
+            .then(response => response.json())
+            .then(json => window.location.pathname = "/")
+            .catch(err => {
+                    changeShowErrror(true)
+                }
+            )
+    }
+
     const onClick = () => {
         changeShow(prev => {
             changeLeftMovies(currentCounter => {
                 console.log(currentCounter)
                 if (currentCounter - 1 === 0) {
-                    setTimeout(() => {
-                        window.location.pathname = "/"
-                    }, 5000)
+                    triggerTraining()
                     changeTitle(null)
                 }
                 return currentCounter - 1
@@ -52,6 +72,7 @@ export function App({movies, rating_counter}) {
                 changeShow(prev)
                 changeTitle(prevTitle => {
                     if (prevTitle === null) {
+                        changeShow(true)
                         return null
                     }
                     return <Title movie={movies[currentMovieIndex]} callback={onClick}/>
@@ -63,9 +84,13 @@ export function App({movies, rating_counter}) {
 
 
     const [title, changeTitle] = useState(<Title movie={movies[currentMovieIndex]} callback={onClick}/>);
-
-    useEffect(() => changeShow(true))
-
+    const error = <h1 className="text-center text-3xl text-danger text-white">
+        Ups! Algo salió mal. No eres tú, soy yo.
+    </h1>
+    useEffect(() => {
+        changeShow(true)
+        changeShowErrror(true)
+    })
     return (<div>
 
         <button onClick={onClick}></button>
@@ -78,7 +103,13 @@ export function App({movies, rating_counter}) {
 
         <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
             {state => {
-                return <Div className={state}>{title && title}</Div>;
+                return <Div className={state}>
+                    <div className="mt-16 flex">
+                        <ClipLoader color={'#fff'} className="mx-auto" loading={showLoading} size={150}/>
+                    </div>
+                    {showError && error}
+                    {title && title}
+                </Div>;
             }}
         </Transition>
     </div>);
