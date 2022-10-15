@@ -30,7 +30,7 @@
       </div>
       <div class="lg:w-2/6 md:w-1/2 bg-zinc-800 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 max-w-sm">
         <h2 class="text-white text-lg font-medium title-font mb-5">{% translate "Sign In" %}</h2>
-        <form class="login text-white" method="POST" action="{% url 'account_login' %}">
+        <form class="login text-gray-700" method="POST" action="{% url 'account_login' %}">
           {% csrf_token %}
           {{ form|crispy }}
           {% if redirect_field_value %}
