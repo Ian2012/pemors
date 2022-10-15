@@ -40,6 +40,7 @@ class CheckUserProfileMiddleware:
             excluded_paths = [
                 reverse("account_logout"),
                 reverse("titles:coldstart"),
+                reverse("users:personality"),
                 reverse("titles_api:user_rating-list"),
                 reverse("titles_api:train"),
             ]
