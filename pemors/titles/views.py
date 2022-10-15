@@ -3,6 +3,8 @@ import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, TemplateView
@@ -47,6 +49,11 @@ class ColdStart(LoginRequiredMixin, TemplateView):
         context_data["movies"] = TitleSerializer(random_items, many=True).data
 
         return context_data
+
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.rating_counter >= 10:
+            return redirect(reverse("home"))
+        return super().dispatch(*args, **kwargs)
 
 
 title_detail_view = TitleDetailView.as_view()

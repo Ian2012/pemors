@@ -30,23 +30,32 @@ export function App({movies, rating_counter}) {
     const [leftMovies, changeLeftMovies] = useState(10 - rating_counter)
     const onClick = () => {
         changeShow(prev => {
+            changeLeftMovies(currentCounter => {
+                console.log(currentCounter)
+                if (currentCounter - 1 === 0) {
+                    setTimeout(() => {
+                        window.location.pathname = "/"
+                    }, 5000)
+                    changeTitle(null)
+                }
+                return currentCounter - 1
+            })
             if (leftMovies === 0) {
-                setTimeout(() => {
-                    window.location.pathname = "/"
-                }, 5000)
                 return prev
             }
 
             if (prev) {
                 currentMovieIndex += 1
-                changeLeftMovies(currentCounter => {
-                    return currentCounter - 1
-                })
             }
 
             setTimeout(() => {
                 changeShow(prev)
-                changeTitle(<Title movie={movies[currentMovieIndex]} callback={onClick}/>)
+                changeTitle(prevTitle => {
+                    if (prevTitle === null) {
+                        return null
+                    }
+                    return <Title movie={movies[currentMovieIndex]} callback={onClick}/>
+                })
             }, 120)
             return !prev
         });
@@ -60,11 +69,16 @@ export function App({movies, rating_counter}) {
     return (<div>
 
         <button onClick={onClick}></button>
-        <h1 className="pt-3 text-center text-white text-3xl title-font font-medium mb-1">Faltan {leftMovies} películas
-                                                                                         por calificar</h1>
+
+        <h1 className="pt-3 text-center text-white text-3xl title-font font-medium mb-1">
+            {leftMovies ? <p> Faltan {leftMovies} películas por calificar </p> :
+                <p> Has terminado, en un momento empezamos! </p>
+            }</h1>
+        }
+
         <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
             {state => {
-                return <Div className={state}>{title}</Div>;
+                return <Div className={state}>{title && title}</Div>;
             }}
         </Transition>
     </div>);
