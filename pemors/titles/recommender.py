@@ -113,13 +113,13 @@ class Recommender:
     def _load_available_titles(self):
         logger.info("Loading available titles")
 
-        users = User.objects.filter(rating_counter__gte=10).prefetch_related("ratings")
-        user_ratings = UserRating.objects.filter(user_id__in=users).values("title_id")
-
         available_titles = cache.get("dataset")
         if available_titles:
             logger.info("Loading available titles from cache")
             return available_titles
+
+        users = User.objects.filter(rating_counter__gte=10).prefetch_related("ratings")
+        user_ratings = UserRating.objects.filter(user_id__in=users).values("title_id")
 
         available_titles = Title.objects.filter(id__in=user_ratings)
         logger.info("Saving available titles in cache")
