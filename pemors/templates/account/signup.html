@@ -11,12 +11,11 @@
   <section class="text-white-600 body-font">
     <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
       <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
-
         <h1 class="title-font font-medium text-3xl text-white">
           <p class="text-white">{% blocktranslate %}Already have an account? Then please
             <a class="text-blue-600" href="{{ login_url }}">sign in</a>
-                                                    .{% endblocktranslate %}</p>
-          <p class="pt-3">{% translate "You can register with one of your third part accounts:" %}</p>
+                                                    .{% endblocktranslate %}
+            {% translate "You can register with one of your third part accounts:" %}</p>
         </h1>
         {% if socialaccount_providers %}
           <div class="socialaccount_ballot leading-relaxed mt-4 text-blue-600">
@@ -27,7 +26,7 @@
           {% include "socialaccount/snippets/login_extra.html" %}
         {% endif %}
       </div>
-      <div class="lg:w-2/6 md:w-1/2 bg-zinc-800 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+      <div class="lg:w-2/6 md:w-1/2 bg-zinc-800 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 max-w-sm">
         <h2 class="text-white text-lg font-medium title-font mb-5">{% translate "Sign Up" %}</h2>
         <form id="signup_form" class="signup login text-white" method="POST" action="{% url 'account_signup' %}">
           {% csrf_token %}
