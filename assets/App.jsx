@@ -25,8 +25,7 @@ const Div = styled.div`
 
 export function App({movies, rating_counter, needed_movies}) {
 
-    let currentMovieIndex = 0;
-
+    const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [show, changeShow] = useState(false);
     const [showError, changeShowErrror] = useState(false)
     const [showLoading, changeShowLoading] = useState(false)
@@ -47,56 +46,45 @@ export function App({movies, rating_counter, needed_movies}) {
             })
     }
 
+    const makeAnimation = () => {
+        setCurrentMovieIndex(prevState => {
+                setTimeout(() => {
+                    changeShow(true)
+                    changeTitle(prevTitle => {
+                        if (prevTitle === null) {
+                            changeShow(true)
+                            return null
+                        }
+                        return <Title movie={movies[prevState + 1]} callback={onClick}/>
+                    })
+                }, 300)
+                return prevState + 1
+            }
+        )
+    }
+
     const onClick = () => {
-        changeShow(prev => {
+        changeShow(prevShow => {
             changeLeftMovies(currentCounter => {
-                console.log(currentCounter)
                 if (currentCounter - 1 === 0) {
                     triggerTraining()
                     changeTitle(null)
                 }
                 return currentCounter - 1
             })
-            if (leftMovies === 0) {
-                return prev
-            }
 
-            if (prev) {
-                currentMovieIndex += 1
-            }
+            makeAnimation()
 
-            setTimeout(() => {
-                changeShow(prev)
-                changeTitle(prevTitle => {
-                    if (prevTitle === null) {
-                        changeShow(true)
-                        return null
-                    }
-                    return <Title movie={movies[currentMovieIndex]} callback={onClick}/>
-                })
-            }, 120)
-            return !prev
+            return !prevShow
         });
     };
 
     const discardClick = () => {
-        setTimeout(() => {
-            changeShow(false)
-            currentMovieIndex += 1
-
-            if (currentMovieIndex > movies.length){
-
-            }
-
-            changeTitle(prevTitle => {
-                if (prevTitle === null) {
-                    changeShow(true)
-                    return null
-                }
-                return <Title movie={movies[currentMovieIndex]} callback={onClick}/>
-            })
-        }, 120)
-    }
+        changeShow(() => {
+            makeAnimation()
+            return false
+        });
+    };
 
 
     const [title, changeTitle] = useState(<Title movie={movies[currentMovieIndex]} callback={onClick}/>);
@@ -124,9 +112,14 @@ export function App({movies, rating_counter, needed_movies}) {
                         </div>
                     }
                     {showError && error}
-                    <strong onClick={discardClick}
-                            className="text-xl align-center cursor-pointer alert-del text-6xl ml-[80%]">&times;</strong>
-                    {title && title}
+
+                    {title &&
+                        <div>
+                            <strong onClick={discardClick}
+                                    className="text-xl align-center cursor-pointer alert-del text-6xl ml-[80%]">&times;</strong>
+                            {title}
+                        </div>
+                    }
                 </Div>;
             }}
         </Transition>

@@ -42,7 +42,7 @@ class CheckUserProfileMiddleware:
                 reverse("titles_api:user_rating-list"),
                 reverse("titles_api:train"),
             ]
-            if request.path not in excluded_paths:
+            if request.path not in excluded_paths and "__debug__" not in request.path:
                 logger.debug(f"User {request.user.email} in coldstart")
                 return redirect("titles:coldstart")
 
