@@ -35,19 +35,16 @@ export function App({movies, rating_counter}) {
     const triggerTraining = () => {
         changeShowLoading(true)
         fetch('/api/titles/train', {
-            method: "GET",
-            headers: {
-                "Content-type": "application/json;charset=UTF-8",
-                "X-CSRFToken": csrftoken
-            },
-            mode: 'same-origin'
+            method: "GET", headers: {
+                "Content-type": "application/json;charset=UTF-8", "X-CSRFToken": csrftoken
+            }, mode: 'same-origin'
         })
             .then(response => response.json())
             .then(json => window.location.pathname = "/")
             .catch(err => {
-                    changeShowErrror(true)
-                }
-            )
+                console.error(err)
+                changeShowErrror(true)
+            })
     }
 
     const onClick = () => {
@@ -89,7 +86,6 @@ export function App({movies, rating_counter}) {
     </h1>
     useEffect(() => {
         changeShow(true)
-        changeShowErrror(true)
     })
     return (<div>
 
@@ -97,9 +93,8 @@ export function App({movies, rating_counter}) {
 
         <h1 className="pt-3 text-center text-white text-3xl title-font font-medium mb-1">
             {leftMovies ? <p> Faltan {leftMovies} películas por calificar </p> :
-                <p> Has terminado, en un momento empezamos! </p>
-            }</h1>
-        }
+                <p> Has terminado, en un momento empezamos! </p>}
+        </h1>
 
         <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
             {state => {

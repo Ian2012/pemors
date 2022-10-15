@@ -43,7 +43,7 @@ class ColdStart(LoginRequiredMixin, TemplateView):
         )
         title_counter = sorted(title_counter, key=lambda d: d["total"], reverse=True)
         titles = [title["title_id"] for title in title_counter]
-        titles = random.choices(titles, k=10)
+        titles = random.choices(titles, k=100)
         random_items = Title.objects.filter(id__in=titles).select_related("rating")
 
         context_data["movies"] = TitleSerializer(random_items, many=True).data
