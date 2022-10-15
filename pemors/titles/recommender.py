@@ -43,6 +43,7 @@ class Recommender:
     dataset = None
 
     def recommend(self, user: User, k=20, use_genre_preferences=True):
+        logger.info("Verify model is trained for user")
         algo = cache.get(settings.USER_CACHE_KEY.format(user.id))
         if not algo:
             algo, available_titles = self._train(user)
@@ -51,9 +52,13 @@ class Recommender:
                 algo,
                 timeout=60 * 60 * 24 * 360,
             )
+            cache.set(
+                "dataset",
+                available_titles,
+                timeout=60 * 5,
+            )
         else:
             available_titles = self._load_available_titles()
-            logger.info(f"Loading recommender for user {user.email}")
 
         logger.info(f"Predicting movies for user {user.email}")
         predictions = (algo.predict(user.id, title.id) for title in available_titles)
@@ -107,9 +112,18 @@ class Recommender:
 
     def _load_available_titles(self):
         logger.info("Loading available titles")
+
         users = User.objects.filter(rating_counter__gte=10).prefetch_related("ratings")
         user_ratings = UserRating.objects.filter(user_id__in=users).values("title_id")
+
+        available_titles = cache.get("dataset")
+        if available_titles:
+            logger.info("Loading available titles from cache")
+            return available_titles
+
         available_titles = Title.objects.filter(id__in=user_ratings)
+        logger.info("Saving available titles in cache")
+        cache.set("dataset", available_titles)
         return available_titles
 
     def _get_recommendation(self, predictions):
