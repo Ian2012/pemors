@@ -103,7 +103,11 @@ class Recommender:
     def _load_data(self, user):
         logger.info("Loading available UserRating")
         dataframe = pd.DataFrame(
-            list(UserRating.objects.filter(user__rating_counter__gte=10).values())
+            list(
+                UserRating.objects.filter(
+                    user__rating_counter__gte=settings.NEEDED_MOVIES
+                ).values()
+            )
         )
         logger.info("Creating surprise Dataset")
         dataset = Dataset.load_from_df(
@@ -125,7 +129,9 @@ class Recommender:
             logger.info("Loading available titles from cache")
             return available_titles
 
-        users = User.objects.filter(rating_counter__gte=10).prefetch_related("ratings")
+        users = User.objects.filter(
+            rating_counter__gte=settings.NEEDED_MOVIES
+        ).prefetch_related("ratings")
         user_ratings = UserRating.objects.filter(user_id__in=users).values("title_id")
 
         available_titles = Title.objects.filter(id__in=user_ratings)

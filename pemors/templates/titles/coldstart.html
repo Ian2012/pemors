@@ -8,6 +8,7 @@
 
   {{ movies|json_script:'movies' }}
   {{ request.user.rating_counter|json_script:'rating_counter' }}
+  {{ needed_movies|json_script:'needed_movies' }}
 
   <script src="{% static 'index-bundle.js' %}"></script>
 {% endblock content %}

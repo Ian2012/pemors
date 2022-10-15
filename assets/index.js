@@ -7,4 +7,5 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 const movies = JSON.parse(document.getElementById('movies').textContent);
 let rating_counter = JSON.parse(document.getElementById('rating_counter').textContent);
-root.render(<App movies={movies} rating_counter={rating_counter}/>)
+const needed_movies = JSON.parse(document.getElementById('needed_movies').textContent);
+root.render(<App movies={movies} rating_counter={rating_counter} needed_movies={needed_movies}/>)

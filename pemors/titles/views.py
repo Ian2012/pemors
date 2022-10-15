@@ -1,6 +1,7 @@
 import logging
 import random
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.shortcuts import redirect
@@ -47,11 +48,12 @@ class ColdStart(LoginRequiredMixin, TemplateView):
         random_items = Title.objects.filter(id__in=titles).select_related("rating")
 
         context_data["movies"] = TitleSerializer(random_items, many=True).data
+        context_data["needed_movies"] = settings.NEEDED_MOVIES
 
         return context_data
 
     def dispatch(self, *args, **kwargs):
-        if self.request.user.rating_counter >= 10:
+        if self.request.user.rating_counter >= settings.NEEDED_MOVIES:
             return redirect(reverse("home"))
         return super().dispatch(*args, **kwargs)
 

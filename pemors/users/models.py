@@ -35,7 +35,7 @@ class User(AbstractUser):
         indexes = [
             models.Index(
                 fields=["rating_counter"],
-                condition=Q(rating_counter__gte=10),
+                condition=Q(rating_counter__gte=settings.NEEDED_MOVIES),
                 name="$(app_label)s_$(class)s_valid",
             ),
             models.Index(fields=["username"]),

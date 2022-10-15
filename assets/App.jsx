@@ -23,14 +23,14 @@ const Div = styled.div`
   }
 `;
 
-export function App({movies, rating_counter}) {
+export function App({movies, rating_counter, needed_movies}) {
 
     let currentMovieIndex = 0;
 
     const [show, changeShow] = useState(false);
     const [showError, changeShowErrror] = useState(false)
     const [showLoading, changeShowLoading] = useState(false)
-    const [leftMovies, changeLeftMovies] = useState(10 - rating_counter)
+    const [leftMovies, changeLeftMovies] = useState(needed_movies - rating_counter)
 
     const triggerTraining = () => {
         changeShowLoading(true)
@@ -79,6 +79,25 @@ export function App({movies, rating_counter}) {
         });
     };
 
+    const discardClick = () => {
+        setTimeout(() => {
+            changeShow(false)
+            currentMovieIndex += 1
+
+            if (currentMovieIndex > movies.length){
+
+            }
+
+            changeTitle(prevTitle => {
+                if (prevTitle === null) {
+                    changeShow(true)
+                    return null
+                }
+                return <Title movie={movies[currentMovieIndex]} callback={onClick}/>
+            })
+        }, 120)
+    }
+
 
     const [title, changeTitle] = useState(<Title movie={movies[currentMovieIndex]} callback={onClick}/>);
     const error = <h1 className="text-center text-3xl text-danger text-white">
@@ -99,10 +118,14 @@ export function App({movies, rating_counter}) {
         <Transition mountOnEnter unmountOnExit timeout={600} in={show}>
             {state => {
                 return <Div className={state}>
-                    <div className="mt-16 flex">
-                        <ClipLoader color={'#fff'} className="mx-auto" loading={showLoading} size={150}/>
-                    </div>
+                    {showLoading &&
+                        <div className="mt-16 flex">
+                            <ClipLoader color={'#fff'} className="mx-auto" loading={showLoading} size={150}/>
+                        </div>
+                    }
                     {showError && error}
+                    <strong onClick={discardClick}
+                            className="text-xl align-center cursor-pointer alert-del text-6xl ml-[80%]">&times;</strong>
                     {title && title}
                 </Div>;
             }}

@@ -5,7 +5,6 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from pemors.titles.models import UserRating
 from pemors.users.models import Profile
 from pemors.users.utils import predict_personality_for_user
 
@@ -35,8 +34,7 @@ class CheckUserProfileMiddleware:
                     )
                     return redirect("users:personality")
 
-        count = UserRating.objects.filter(user=request.user).count()
-        if count < 10:
+        if request.user.rating_counter < settings.NEEDED_MOVIES:
             excluded_paths = [
                 reverse("account_logout"),
                 reverse("titles:coldstart"),

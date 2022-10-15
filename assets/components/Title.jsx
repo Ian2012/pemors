@@ -21,7 +21,7 @@ export function Title({movie, callback}) {
     useEffect(() => fetchData())
 
     return <section className="text-gray-100 body-font overflow-hidden">
-        <div className="container px-5 py-24 mx-auto">
+        <div className="container px-5 py-6 mx-auto">
             <div className="lg:w-4/5 mx-auto flex flex-wrap justify-center">
                 {poster && <img alt="ecommerce"
                                 className="min-h-[32rem] lg:w-1/2 max-h-[550px] lg:h-auto h-64 object-contain object-center rounded"

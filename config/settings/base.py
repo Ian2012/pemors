@@ -212,10 +212,13 @@ DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TEMPLATE_CONTEXT": True,
     "SHOW_TOOLBAR_CALLBACK": "config.settings.base.show_toolbar",
 }
+NEEDED_MOVIES = 20
 
 
 def show_toolbar(request):
-    return (
+    from django.conf import settings
+
+    return settings.DEBUG or (
         not request.is_ajax()
         and request.user
         and request.user.is_authenticated
