@@ -23,7 +23,10 @@ const Div = styled.div`
   }
 `;
 
-export function App({movies, rating_counter, needed_movies}) {
+export default function Coldstart() {
+    const movies = JSON.parse(document.getElementById('movies').textContent);
+    const rating_counter = JSON.parse(document.getElementById('rating_counter').textContent);
+    const needed_movies = JSON.parse(document.getElementById('needed_movies').textContent);
 
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [show, changeShow] = useState(false);
