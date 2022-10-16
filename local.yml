@@ -1,9 +1,9 @@
 version: '3'
 
 volumes:
-  pemors_local_postgres_data: {}
-  pemors_local_postgres_data_backups: {}
-  redisdata: {}
+  pemors_local_postgres_data: { }
+  pemors_local_postgres_data_backups: { }
+  redisdata: { }
 
 services:
   django:
@@ -64,3 +64,12 @@ services:
     container_name: pemors_local_redis
     volumes:
       - redisdata:/data
+
+  react:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./compose/local/react/Dockerfile
+    volumes:
+      - .:/app:z
+    container_name: pemors_local_react
