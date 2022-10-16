@@ -1,34 +1,4 @@
-import logging
-
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
-
-from pemors.titles.recommender import Recommender
-
-logger = logging.getLogger(__name__)
-
-
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = "pages/home.html"
-    movie_recommender = Recommender()
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            logger.info(f"Recommending movies for user {self.request.user.email}")
-
-            # user = User.objects.select_related(
-            #    "profile"
-            # ).get(id=self.request.user.id)
-
-            context_data["recommended_movies"] = self.movie_recommender.recommend(
-                self.request.user,
-                use_genre_preferences=True,
-            )
-        return context_data
-
-
-home_view = HomeView.as_view()
 
 
 class AboutView(TemplateView):

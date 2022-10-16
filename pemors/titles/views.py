@@ -12,6 +12,7 @@ from django.views.generic import DetailView, TemplateView
 
 from pemors.titles.api.serializers import TitleSerializer
 from pemors.titles.models import Title, UserRating
+from pemors.titles.recommender import Recommender
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,29 @@ class ColdStart(LoginRequiredMixin, TemplateView):
             return redirect(reverse("home"))
         return super().dispatch(*args, **kwargs)
 
+
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/home.html"
+    movie_recommender = Recommender()
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        logger.info(f"Recommending movies for user {self.request.user.email}")
+        context_data["recommended_movies"] = self.movie_recommender.recommend(
+            self.request.user,
+            use_genre_preferences=True,
+        )
+        context_data["movies"] = TitleSerializer(
+            (
+                recommendation["title"]
+                for recommendation in context_data["recommended_movies"]
+            ),
+            many=True,
+        ).data
+        return context_data
+
+
+home_view = HomeView.as_view()
 
 title_detail_view = TitleDetailView.as_view()
 
