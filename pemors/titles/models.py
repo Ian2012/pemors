@@ -110,7 +110,9 @@ def user_rating_created_counter_signal(sender, instance, created, **kwargs):
         instance.user.rating_counter = UserRating.objects.filter(
             user_id=instance.user.id
         ).count()
-        instance.user.save()
+
+    instance.user.in_recommender = False
+    instance.user.save()
 
 
 @receiver(post_delete, sender=UserRating)
@@ -118,4 +120,6 @@ def user_rating_deleted_counter_signal(sender, instance, **kwargs):
     instance.user.rating_counter = UserRating.objects.filter(
         user_id=instance.user.id
     ).count()
+
+    instance.user.in_recommender = False
     instance.user.save()

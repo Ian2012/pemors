@@ -48,7 +48,6 @@ class Recommender:
         recommendations = cache.get(RECOMMENDATION_CACHE_FORMAT.format(user.id))
         if not recommendations:
             recommendations = self.generate_recommendations(user)
-        else:
             logger.info(f"Saving recommendations for user {user.email} in cache")
             cache.set(RECOMMENDATION_CACHE_FORMAT.format(user.id), recommendations)
 
