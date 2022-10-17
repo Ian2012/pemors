@@ -43,6 +43,9 @@ class Rating(models.Model):
     class Meta:
         ordering = ["-average_rating"]
 
+    def __str__(self):
+        return f"{self.average_rating}"
+
 
 class Aka(models.Model):
     title = models.ForeignKey(to=Title, related_name="akas", on_delete=models.CASCADE)

@@ -42,7 +42,29 @@ class Recommender:
     dataframe = None
     dataset = None
 
-    def recommend(self, user: User, k=20, use_genre_preferences=True):
+    def recommend(self, user, k=20, use_genre_preferences=True):
+        predictions = self.calculate_prediction(user)
+        recommendations = self._get_recommendation(predictions)[0:k]
+        titles_id = (recommendation["title"] for recommendation in recommendations)
+
+        titles = list(
+            Title.objects.filter(id__in=titles_id)
+            .select_related("rating")
+            .prefetch_related("genres__genre")
+            .all()
+        )
+
+        titles = {title.id: title for title in titles}
+
+        for i, recommendation in enumerate(recommendations):
+            recommendations[i]["title"] = titles[recommendation["title"]]
+
+        if use_genre_preferences:
+            return self.sort_recommendations_by_genre_preferences(recommendations, user)
+
+        return recommendations
+
+    def _load_recommender(self, user):
         logger.info("Verify model is trained for user")
 
         cache_results = cache.get_many(
@@ -67,27 +89,14 @@ class Recommender:
         if not available_titles:
             available_titles = self._load_available_titles()
 
+        return algo, available_titles
+
+    def calculate_prediction(self, user):
+        algo, available_titles = self._load_recommender(user)
         logger.info(f"Predicting movies for user {user.email}")
         predictions = (algo.predict(user.id, title.id) for title in available_titles)
-        recommendations = self._get_recommendation(predictions)[0:k]
-        titles_id = (recommendation["title"] for recommendation in recommendations)
 
-        titles = list(
-            Title.objects.filter(id__in=titles_id)
-            .select_related("rating")
-            .prefetch_related("genres__genre")
-            .all()
-        )
-
-        titles = {title.id: title for title in titles}
-
-        for i, recommendation in enumerate(recommendations):
-            recommendations[i]["title"] = titles[recommendation["title"]]
-
-        if use_genre_preferences:
-            return self.sort_recommendations_by_genre_preferences(recommendations, user)
-
-        return recommendations
+        return predictions
 
     def _train(self, user):
         logger.info(f"Training recommender for user {user.email}")
@@ -147,6 +156,7 @@ class Recommender:
         return sorted(recommendations, key=lambda d: d["rating"])
 
     def sort_recommendations_by_genre_preferences(self, recommendations, user):
+        logger.info(f"Sorting recommendations by user genre preferences {user.email}")
         profile = user.profile
         user_profile = [profile.opn, profile.con, profile.ext, profile.agr, profile.neu]
         user_genre_preferences = {}

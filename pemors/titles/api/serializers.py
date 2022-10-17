@@ -27,6 +27,8 @@ class UserRatingSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    rating = serializers.StringRelatedField()
+
     class Meta:
         model = Title
         fields = "__all__"
