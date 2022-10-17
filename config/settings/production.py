@@ -32,6 +32,7 @@ CACHES = {
             # https://github.com/jazzband/django-redis#memcached-exceptions-behavior
             "IGNORE_EXCEPTIONS": True,
         },
+        "TIMEOUT": 60 * 60 * 24 * 360,
     }
 }
 

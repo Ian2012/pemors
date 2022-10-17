@@ -36,15 +36,24 @@ USER_GENRE_PREFERENCES = {
     "Thriller": [3.85, 3.54, 3.51, 3.59, 2.76],
     "War": [3.82, 3.51, 3.49, 3.50, 2.71],
 }
+RECOMMENDATION_CACHE_FORMAT = "recommendations_{}"
+AVAILABLE_TITLES_CACHE_KEY = "available_titles"
 
 
 class Recommender:
     dataframe = None
     dataset = None
 
-    def recommend(self, user, k=20, use_genre_preferences=True):
-        predictions = self.calculate_prediction(user)
-        recommendations = self._get_recommendation(predictions)[0:k]
+    def recommend(self, user, page=1, page_size=30, use_genre_preferences=True):
+        recommendations = cache.get(RECOMMENDATION_CACHE_FORMAT.format(user.id))
+        if not recommendations:
+            recommendations = self.generate_recommendations(user)
+        else:
+            logger.info(f"Saving recommendations for user {user.email} in cache")
+            cache.set(RECOMMENDATION_CACHE_FORMAT.format(user.id), recommendations)
+
+        i, j = page * page_size, (page + 1) * page_size
+        recommendations = recommendations[i:j]
         titles_id = (recommendation["title"] for recommendation in recommendations)
 
         titles = list(
@@ -68,23 +77,18 @@ class Recommender:
         logger.info("Verify model is trained for user")
 
         cache_results = cache.get_many(
-            [settings.USER_CACHE_KEY.format(user.id), "dataset"]
+            [settings.USER_CACHE_KEY.format(user.id), AVAILABLE_TITLES_CACHE_KEY]
         )
         algo = cache_results.get(settings.USER_CACHE_KEY.format(user.id))
-        available_titles = cache_results.get("dataset")
+        available_titles = cache_results.get(AVAILABLE_TITLES_CACHE_KEY)
 
         if not algo:
             algo, available_titles = self._train(user)
             cache.set(
                 settings.USER_CACHE_KEY.format(user.id),
                 algo,
-                timeout=60 * 60 * 24 * 360,
             )
-            cache.set(
-                "dataset",
-                available_titles,
-                timeout=60 * 60 * 24 * 360,
-            )
+            cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)
 
         if not available_titles:
             available_titles = self._load_available_titles()
@@ -133,7 +137,7 @@ class Recommender:
     def _load_available_titles(self):
         logger.info("Loading available titles")
 
-        available_titles = cache.get("dataset")
+        available_titles = cache.get(AVAILABLE_TITLES_CACHE_KEY)
         if available_titles:
             logger.info("Loading available titles from cache")
             return available_titles
@@ -145,10 +149,12 @@ class Recommender:
 
         available_titles = Title.objects.filter(id__in=user_ratings)
         logger.info("Saving available titles in cache")
-        cache.set("dataset", available_titles)
+        cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)
         return available_titles
 
-    def _get_recommendation(self, predictions):
+    def generate_recommendations(self, user):
+        logger.info(f"Generating recommendations for user {user.email}")
+        predictions = self.calculate_prediction(user)
         recommendations = (
             {"title": iid, "rating": Decimal(est)}
             for uid, iid, true_r, est, _ in predictions
