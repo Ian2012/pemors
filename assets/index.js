@@ -1,9 +1,9 @@
-import React, {Suspense, lazy} from "react";
+import React, {lazy, Suspense} from "react";
 import {createRoot} from "react-dom/client";
 
 
-const Coldstart = lazy(() => import ("./Coldstart.jsx"))
-const Recommender = lazy(() => import ("./Recommender.jsx"))
+const Coldstart = lazy(() => import ("./components/Coldstart/Coldstart.jsx"))
+const Recommender = lazy(() => import ("./components/Recommender/Recommender.jsx"))
 
 const elements = [
     document.getElementById("coldstart"),

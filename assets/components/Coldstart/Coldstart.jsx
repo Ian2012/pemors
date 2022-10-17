@@ -1,5 +1,5 @@
 import {Transition} from "react-transition-group";
-import {Title} from "./components/Title.jsx";
+import {RatingTitle} from "./RatingTitle.jsx";
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -58,7 +58,7 @@ export default function Coldstart() {
                             changeShow(true)
                             return null
                         }
-                        return <Title movie={movies[prevState + 1]} callback={onClick}/>
+                        return <RatingTitle movie={movies[prevState + 1]} callback={onClick}/>
                     })
                 }, 300)
                 return prevState + 1
@@ -90,7 +90,7 @@ export default function Coldstart() {
     };
 
 
-    const [title, changeTitle] = useState(<Title movie={movies[currentMovieIndex]} callback={onClick}/>);
+    const [title, changeTitle] = useState(<RatingTitle movie={movies[currentMovieIndex]} callback={onClick}/>);
     const error = <h1 className="text-center text-3xl text-danger text-white">
         Ups! Algo salió mal. No eres tú, soy yo.
     </h1>

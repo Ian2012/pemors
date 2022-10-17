@@ -63,22 +63,6 @@ class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "pages/home.html"
     movie_recommender = Recommender()
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        logger.info(f"Recommending movies for user {self.request.user.email}")
-        context_data["recommended_movies"] = self.movie_recommender.recommend(
-            self.request.user,
-            use_genre_preferences=True,
-        )
-        context_data["movies"] = TitleSerializer(
-            (
-                recommendation["title"]
-                for recommendation in context_data["recommended_movies"]
-            ),
-            many=True,
-        ).data
-        return context_data
-
 
 home_view = HomeView.as_view()
 

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Rating} from "./Rating.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
 
-export function Title({movie, callback}) {
+export function RatingTitle({movie, callback}) {
 
     const [poster, setPoster] = useState('')
     const fetchData = () => {
