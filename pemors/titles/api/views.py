@@ -26,7 +26,7 @@ class TrainView(APIView):
     def get(self, request):
         logger.info(f"Training model for user {request.user.email}")
         algo, available_titles = self.movie_recommender._train(request.user)
-        cache.set(settings.USER_CACHE_KEY.format(request.user.id), algo)
+        cache.set(settings.RECOMMENDER_CACHE_KEY, algo)
         return JsonResponse(status=200, data={"message": "Ready to start."})
 
 

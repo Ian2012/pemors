@@ -77,15 +77,15 @@ class Recommender:
         logger.info("Verify model is trained for user")
 
         cache_results = cache.get_many(
-            [settings.USER_CACHE_KEY.format(user.id), AVAILABLE_TITLES_CACHE_KEY]
+            [settings.RECOMMENDER_CACHE_KEY, AVAILABLE_TITLES_CACHE_KEY]
         )
-        algo = cache_results.get(settings.USER_CACHE_KEY.format(user.id))
+        algo = cache_results.get(settings.RECOMMENDER_CACHE_KEY)
         available_titles = cache_results.get(AVAILABLE_TITLES_CACHE_KEY)
 
         if not algo:
             algo, available_titles = self._train(user)
             cache.set(
-                settings.USER_CACHE_KEY.format(user.id),
+                settings.RECOMMENDER_CACHE_KEY,
                 algo,
             )
             cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)

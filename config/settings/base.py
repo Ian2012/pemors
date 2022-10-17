@@ -338,4 +338,4 @@ SPECTACULAR_SETTINGS = {
 # ------------------------------------------------------------------------------
 SYNTETHIC_USER_PATTERN = "SyntethicUser"
 
-USER_CACHE_KEY = "recommender_{}"
+RECOMMENDER_CACHE_KEY = "updated_recommender"
