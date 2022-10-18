@@ -82,7 +82,7 @@ class Recommender:
         available_titles = cache_results.get(AVAILABLE_TITLES_CACHE_KEY)
 
         if not algo:
-            algo, available_titles = self._train(user)
+            algo, available_titles = self.train(user)
             cache.set(
                 settings.RECOMMENDER_CACHE_KEY,
                 algo,
@@ -101,7 +101,7 @@ class Recommender:
 
         return predictions
 
-    def _train(self, user):
+    def train(self, user=None):
         logger.info(f"Training recommender for user {user.email}")
         dataset, available_titles = self._load_data(user)
         logger.info(f"Building full trainset for user {user.email}")
@@ -112,7 +112,7 @@ class Recommender:
 
         return algo, available_titles
 
-    def _load_data(self, user):
+    def _load_data(self, user=None):
         logger.info("Loading available UserRating")
         dataframe = pd.DataFrame(
             list(
@@ -126,11 +126,15 @@ class Recommender:
             dataframe[["user_id", "title_id", "rating"]],
             Reader(rating_scale=(1, 10)),
         )
-        rated_titles = user.ratings.values_list("title_id", flat=True)
+
         available_titles = dataframe["title_id"].unique()
-        available_titles = Title.objects.filter(id__in=available_titles).exclude(
-            id__in=rated_titles
-        )
+
+        if user:
+            available_titles = Title.objects.filter(id__in=available_titles).exclude(
+                id__in=user.ratings.values_list("title_id", flat=True)
+            )
+        else:
+            available_titles = Title.objects.filter(id__in=available_titles)
         return dataset, available_titles
 
     def _load_available_titles(self):
