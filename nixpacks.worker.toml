@@ -1,0 +1,29 @@
+[variables]
+NIXPACKS_METADATA = 'python'
+PYTHONUNBUFFERED = '1'
+
+
+[phases.setup]
+name = 'setup'
+nixPkgs = [
+    'python39',
+    'postgresql',
+]
+nixLibs = [
+    'zlib',
+    'stdenv.cc.cc.lib',
+]
+nixOverlays = ['https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz']
+
+
+[phases.install]
+name = 'install'
+dependsOn = ['setup']
+cmds = [
+    'python -m venv /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt',
+]
+cacheDirectories = ['/root/.cache/pip']
+paths = ['/opt/venv/bin']
+
+[start]
+cmd = 'celery -A config worker -l INFO'

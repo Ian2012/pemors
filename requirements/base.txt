@@ -36,3 +36,4 @@ surprise==0.1
 django-picklefield==3.1
 googletrans==4.0.0-rc1
 celery==5.2.7
+django_celery_results==2.4.0
