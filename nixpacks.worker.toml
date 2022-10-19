@@ -15,6 +15,17 @@ nixLibs = [
 ]
 nixOverlays = ['https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz']
 
+[phases.build]
+name = 'build'
+cmds = [
+    '',
+]
+
+[phases.release]
+name = 'release'
+cmds = [
+    '',
+]
 
 [phases.install]
 name = 'install'
