@@ -46,10 +46,8 @@ def should_train(user):
     try:
         history = HistoricalRecommender.objects.latest("created")
         timediff = now - history.created
-        return (
-            settings.DEBUG
-            or user.rating_counter >= settings.NEEDED_MOVIES
-            and timediff > datetime.timedelta(minutes=5)
+        return user.rating_counter >= settings.NEEDED_MOVIES and (
+            not user.in_recommender or timediff > datetime.timedelta(minutes=5)
         )
     except HistoricalRecommender.DoesNotExist:
         return user.rating_counter >= settings.NEEDED_MOVIES

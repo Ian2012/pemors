@@ -34,19 +34,34 @@ export default function Coldstart() {
     const [showLoading, changeShowLoading] = useState(false)
     const [leftMovies, changeLeftMovies] = useState(needed_movies - rating_counter)
 
-    const triggerTraining = () => {
-        changeShowLoading(true)
-        fetch('/api/titles/train', {
+    const getStatus= () => {
+        fetch('/api/titles/progress', {
             method: "GET", headers: {
                 "Content-type": "application/json;charset=UTF-8", "X-CSRFToken": csrftoken
             }, mode: 'same-origin'
         })
             .then(response => response.json())
-            .then(json => window.location.pathname = "/")
+            .then(json => {
+                console.log(json)
+                if (json["status"] === "SUCCESS") {
+                    window.location.pathname = "/"
+                } else {
+                    setTimeout(() => {
+                        getStatus()
+                    }, 1000)
+                }
+            })
             .catch(err => {
                 console.error(err)
                 changeShowErrror(true)
             })
+    }
+
+    const triggerTraining = () => {
+        changeShowLoading(true)
+        console.log("Training")
+        getStatus()
+
     }
 
     const makeAnimation = () => {

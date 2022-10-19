@@ -44,7 +44,14 @@ class ColdStart(LoginRequiredMixin, TemplateView):
             .values("title_id", "total")
         )
         title_counter = sorted(title_counter, key=lambda d: d["total"], reverse=True)
-        titles = [title["title_id"] for title in title_counter]
+        ratings = UserRating.objects.filter(user=self.request.user).values_list(
+            "title_id", flat=True
+        )
+        titles = [
+            title["title_id"]
+            for title in title_counter
+            if title["title_id"] not in ratings
+        ]
         titles = random.choices(titles, k=100)
         random_items = Title.objects.filter(id__in=titles).select_related("rating")
 
