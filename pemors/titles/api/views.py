@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from pemors.titles.api.serializers import TitleSerializer, UserRatingSerializer
-from pemors.titles.models import UserRating
+from pemors.titles.models import UserRating, UserTasks
 from pemors.titles.recommender import Recommender
 from pemors.titles.tasks import train_recommender_for_user_task
 
@@ -22,8 +22,13 @@ class TrainView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        query = UserTasks.objects.filter(user=request.user)
+
+        if query.exists():
+            return JsonResponse(status=200, data={"message": "Already trained"})
+
         train_recommender_for_user_task.delay(request.user.id)
-        return JsonResponse(status=200, data={"message": "Training"})
+        return JsonResponse(status=201, data={"message": "Training"})
 
 
 train_view = TrainView.as_view()
@@ -57,3 +62,19 @@ class RecommendationView(APIView):
 
 
 recommendation_view = RecommendationView.as_view()
+
+
+class ProgressAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = {}
+        query = UserTasks.objects.filter(user=request.user)
+        if query.exists():
+            data["status"] = query[0].task_result.status
+        else:
+            data["status"] = "Not found"
+        return JsonResponse(status=200, data=data)
+
+
+progress_view = ProgressAPI.as_view()
