@@ -8,6 +8,7 @@ name = 'setup'
 nixPkgs = [
     'python39',
     'postgresql',
+    'gcc',
 ]
 nixLibs = [
     'zlib',
