@@ -16,7 +16,7 @@ def common_user_rating_signal(instance):
     ).count()
 
     instance.user.save()
-    if not instance.user.in_recommender:  # User is new
+    if instance.user.in_recommender:  # User is new
         logger.info("Skipping training")
     elif should_train(instance.user):
         train_recommender_for_user_task.delay(instance.user.id)
