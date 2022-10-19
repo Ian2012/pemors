@@ -1,7 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django_celery_results.models import TaskResult
-from django_extensions.db.models import TimeStampedModel
 
 from pemors.users.models import User
 
@@ -104,8 +103,8 @@ class UserRating(models.Model):
         ]
 
 
-class HistoricalRecommender(TimeStampedModel):
-    ...
+class HistoricalRecommender(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
 
 
 class UserTasks(models.Model):
