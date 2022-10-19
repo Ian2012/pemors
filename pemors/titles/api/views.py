@@ -8,7 +8,6 @@ from rest_framework.views import APIView
 from pemors.titles.api.serializers import TitleSerializer, UserRatingSerializer
 from pemors.titles.models import UserRating, UserTasks
 from pemors.titles.recommender import Recommender
-from pemors.titles.tasks import train_recommender_for_user_task
 
 logger = logging.getLogger(__name__)
 
@@ -16,22 +15,6 @@ logger = logging.getLogger(__name__)
 class UserRatingViewSet(viewsets.ModelViewSet):
     serializer_class = UserRatingSerializer
     queryset = UserRating.objects.all()
-
-
-class TrainView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        query = UserTasks.objects.filter(user=request.user)
-
-        if query.exists():
-            return JsonResponse(status=200, data={"message": "Already trained"})
-
-        train_recommender_for_user_task.delay(request.user.id)
-        return JsonResponse(status=201, data={"message": "Training"})
-
-
-train_view = TrainView.as_view()
 
 
 class RecommendationView(APIView):
