@@ -4,6 +4,7 @@ from django_celery_results.models import TaskResult
 
 from pemors.titles.models import UserTasks
 from pemors.titles.utils import train_for_user
+from pemors.users.models import User
 
 logger = get_task_logger(__name__)
 
@@ -13,5 +14,6 @@ def train_recommender_for_user_task(self, user_id):
     UserTasks.objects.create(
         user_id=user_id, task_result=TaskResult.objects.get(task_id=self.request.id)
     )
+    User.objects.update(in_recommender=True)
     train_for_user(user_id, logger)
     return user_id
