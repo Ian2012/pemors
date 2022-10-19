@@ -50,7 +50,9 @@ class Recommender:
     def recommend(
         self, user, page=1, page_size=30, use_genre_preferences=True, force=False
     ):
-        recommendations = self.generate_recommendations_for_user(user, force)
+        recommendations = self.generate_recommendations_for_user(
+            user, force, calculate_recommendations=False
+        )
 
         i, j = page * page_size, (page + 1) * page_size
         recommendations = recommendations[i:j]
@@ -72,44 +74,6 @@ class Recommender:
             return self.sort_recommendations_by_genre_preferences(recommendations, user)
 
         return recommendations
-
-    def load_recommender(self, force=False):
-        self.logger.info("Verify model is trained for user")
-
-        cache_results = cache.get_many(
-            [settings.RECOMMENDER_CACHE_KEY, AVAILABLE_TITLES_CACHE_KEY]
-        )
-        algo = cache_results.get(settings.RECOMMENDER_CACHE_KEY)
-        available_titles = cache_results.get(AVAILABLE_TITLES_CACHE_KEY)
-
-        if force or not algo:
-            algo, available_titles = self.train()
-            self.logger.info("Saving algorithm and titles in cache")
-            cache.set(
-                settings.RECOMMENDER_CACHE_KEY,
-                algo,
-            )
-            cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)
-            HistoricalRecommender.objects.create()
-
-        if not available_titles:
-            self.logger.info("Loading available titles")
-            users = User.objects.filter(
-                rating_counter__gte=settings.NEEDED_MOVIES
-            ).prefetch_related("ratings")
-            user_ratings = UserRating.objects.filter(user_id__in=users).values(
-                "title_id"
-            )
-            available_titles = Title.objects.filter(id__in=user_ratings)
-
-        return algo, available_titles
-
-    def calculate_prediction(self, user):
-        algo, available_titles = self.load_recommender(user)
-        self.logger.info(f"Predicting movies for user {user.email}")
-        predictions = (algo.predict(user.id, title.id) for title in available_titles)
-
-        return predictions
 
     def train(self):
         self.logger.info("Training recommender")
@@ -137,29 +101,68 @@ class Recommender:
 
         return algo, available_titles
 
-    def generate_recommendations_for_user(self, user, force=False):
-        def run():
-            self.logger.info(f"Generating recommendations for user {user.email}")
-            predictions = self.calculate_prediction(user)
-            recommendations = [
-                {"title": iid, "rating": Decimal(est)}
-                for uid, iid, true_r, est, _ in predictions
-            ]
-            recommendations = sorted(recommendations, key=lambda d: d["rating"])
-            self.logger.info(f"Saving recommendations for user {user.email} in cache")
-            cache.set(RECOMMENDATION_CACHE_FORMAT.format(user.id), recommendations)
-            return recommendations
+    def load_recommender(self, train_recommender):
+        self.logger.info("Verify model is trained for user")
 
-        if force:
-            run()
-            return
+        cache_results = cache.get_many(
+            [settings.RECOMMENDER_CACHE_KEY, AVAILABLE_TITLES_CACHE_KEY]
+        )
+        algo = cache_results.get(settings.RECOMMENDER_CACHE_KEY)
+        available_titles = cache_results.get(AVAILABLE_TITLES_CACHE_KEY)
+
+        if train_recommender or not algo:
+            algo, available_titles = self.train()
+            self.logger.info("Saving algorithm and titles in cache")
+            cache.set(
+                settings.RECOMMENDER_CACHE_KEY,
+                algo,
+            )
+            cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)
+            User.objects.update(is_updated=False)
+            HistoricalRecommender.objects.create()
+
+        if not available_titles:
+            self.logger.info("Loading available titles")
+            users = User.objects.filter(
+                rating_counter__gte=settings.NEEDED_MOVIES
+            ).prefetch_related("ratings")
+            user_ratings = UserRating.objects.filter(user_id__in=users).values(
+                "title_id"
+            )
+            available_titles = Title.objects.filter(id__in=user_ratings)
+
+        return algo, available_titles
+
+    def generate_recommendations_for_user(
+        self, user, train_recommender, calculate_recommendations
+    ):
+        if train_recommender or calculate_recommendations:
+            return self.calculate_recommendations(user, train_recommender)
 
         current_recommendations = cache.get(RECOMMENDATION_CACHE_FORMAT.format(user.id))
+
         if not current_recommendations:
-            return run()
+            return self.calculate_recommendations(user, train_recommender)
 
         self.logger.info(f"Getting recommendations from cache {user.email}")
         return current_recommendations
+
+    def calculate_recommendations(self, user, train_recommender):
+        self.logger.info(f"Generating recommendations for user {user.email}")
+        algo, available_titles = self.load_recommender(train_recommender)
+
+        self.logger.info(f"Predicting movies for user {user.email}")
+        predictions = (algo.predict(user.id, title.id) for title in available_titles)
+
+        recommendations = [
+            {"title": iid, "rating": Decimal(est)}
+            for uid, iid, true_r, est, _ in predictions
+        ]
+        recommendations = sorted(recommendations, key=lambda d: d["rating"])
+
+        self.logger.info(f"Saving recommendations for user {user.email} in cache")
+        cache.set(RECOMMENDATION_CACHE_FORMAT.format(user.id), recommendations)
+        return recommendations
 
     def sort_recommendations_by_genre_preferences(self, recommendations, user):
         self.logger.info(

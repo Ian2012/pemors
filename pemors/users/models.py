@@ -19,6 +19,7 @@ class User(AbstractUser):
     last_name = None  # type: ignore
     rating_counter = models.IntegerField(default=0)
     in_recommender = models.BooleanField(default=False)
+    is_updated = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         """Get url for user's detail view.

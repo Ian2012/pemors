@@ -17,7 +17,11 @@ class UserAdmin(auth_admin.UserAdmin):
         (None, {"fields": ("username", "password")}),
         (
             _("Personal info"),
-            {"fields": ("name", "email", "rating_counter", "in_recommender")},
+            {"fields": ("name", "email")},
+        ),
+        (
+            _("Recommender info"),
+            {"fields": ("rating_counter", "in_recommender", "is_updated")},
         ),
         (
             _("Permissions"),

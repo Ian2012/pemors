@@ -402,7 +402,13 @@ def generate_username(user_id):
     return f"{settings.SYNTETHIC_USER_PATTERN}{user_id}"
 
 
-def train_for_user(user_id, celery_logger=None):
+def train_for_user(user_id, celery_logger=None, train_recommender=True):
     user = User.objects.get(id=user_id)
     recommender = Recommender(celery_logger)
-    recommender.generate_recommendations_for_user(user=user, force=True)
+    recommender.generate_recommendations_for_user(
+        user=user, train_recommender=train_recommender, calculate_recommendations=True
+    )
+    if train_recommender:
+        user.in_recommender = True
+    user.is_updated = True
+    user.save()

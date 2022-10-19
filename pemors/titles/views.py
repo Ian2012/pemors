@@ -12,7 +12,7 @@ from django.views.generic import DetailView, TemplateView
 
 from pemors.titles.api.serializers import TitleSerializer
 from pemors.titles.models import Title, UserRating
-from pemors.titles.recommender import Recommender
+from pemors.titles.tasks import recalculate_recommendations_for_user_task
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +68,13 @@ class ColdStart(LoginRequiredMixin, TemplateView):
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "pages/home.html"
-    movie_recommender = Recommender()
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_updated:
+            recalculate_recommendations_for_user_task.delay(self.request.user.id)
+        else:
+            logger.info(f"Skipping recalculation for user {self.request.user.email}")
+        return super().get_context_data(**kwargs)
 
 
 home_view = HomeView.as_view()
