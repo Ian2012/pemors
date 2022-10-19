@@ -14,8 +14,10 @@ export function Rating({movie, callback}) {
             mode: 'same-origin'
         })
             .then(response => response.json())
-            .then(json => console.log(json))
-        callback()
+            .then(json => {
+                console.log(json)
+                callback()
+            })
     };
 
     return <div className="flex justify-center">
