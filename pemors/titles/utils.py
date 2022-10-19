@@ -17,6 +17,7 @@ from pemors.titles.models import (
     TitleGenre,
     UserRating,
 )
+from pemors.titles.recommender import Recommender
 from pemors.users.models import User
 
 csv.field_size_limit(sys.maxsize)
@@ -399,3 +400,9 @@ class UserRatingPreprocessor(Preprocesor):
 
 def generate_username(user_id):
     return f"{settings.SYNTETHIC_USER_PATTERN}{user_id}"
+
+
+def train_for_user(user_id, celery_logger=None):
+    user = User.objects.get(id=user_id)
+    recommender = Recommender(celery_logger)
+    recommender.generate_recommendations_for_user(user=user, force=True)

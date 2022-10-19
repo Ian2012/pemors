@@ -1,7 +1,5 @@
 import logging
 
-from django.conf import settings
-from django.core.cache import cache
 from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +8,7 @@ from rest_framework.views import APIView
 from pemors.titles.api.serializers import TitleSerializer, UserRatingSerializer
 from pemors.titles.models import UserRating
 from pemors.titles.recommender import Recommender
+from pemors.titles.tasks import train_recommender_for_user_task
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +20,10 @@ class UserRatingViewSet(viewsets.ModelViewSet):
 
 class TrainView(APIView):
     permission_classes = [IsAuthenticated]
-    movie_recommender = Recommender()
 
     def get(self, request):
-        logger.info(f"Training model for user {request.user.email}")
-        algo, available_titles = self.movie_recommender.train(request.user)
-        cache.set(settings.RECOMMENDER_CACHE_KEY, algo)
-        return JsonResponse(status=200, data={"message": "Ready to start."})
+        train_recommender_for_user_task.delay(request.user.id)
+        return JsonResponse(status=200, data={"message": "Training"})
 
 
 train_view = TrainView.as_view()

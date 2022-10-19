@@ -77,6 +77,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "drf_spectacular",
+    "django_celery_results",
 ]
 
 LOCAL_APPS = ["pemors.users", "pemors.titles", "theme"]
@@ -341,4 +342,7 @@ SYNTETHIC_USER_PATTERN = "SyntethicUser"
 RECOMMENDER_CACHE_KEY = "updated_recommender"
 
 CELERY_BROKER_URL = env("REDIS_URL", default="redis://pemors_local_redis:6379")
-CELERY_RESULT_BACKEND = env("REDIS_URL", default="redis://pemors_local_redis:6379")
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_SEND_SENT_EVENT = True
+CELERY_SEND_EVENTS = True

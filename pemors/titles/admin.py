@@ -12,6 +12,7 @@ from .models import (
     Title,
     TitleGenre,
     UserRating,
+    UserTasks,
 )
 
 
@@ -74,3 +75,8 @@ class UserRatingAdmin(admin.ModelAdmin):
 @admin.register(HistoricalRecommender)
 class HistoricalRecommenderAdmin(admin.ModelAdmin):
     list_display = ["id", "created"]
+
+
+@admin.register(UserTasks)
+class UserTasksAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "task_result"]

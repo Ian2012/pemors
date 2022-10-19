@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_celery_results.models import TaskResult
 from django_extensions.db.models import TimeStampedModel
 
 from pemors.users.models import User
@@ -105,3 +106,8 @@ class UserRating(models.Model):
 
 class HistoricalRecommender(TimeStampedModel):
     ...
+
+
+class UserTasks(models.Model):
+    user = models.ForeignKey(to=User, related_name="tasks", on_delete=models.CASCADE)
+    task_result = models.OneToOneField(TaskResult, on_delete=models.CASCADE)
