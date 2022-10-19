@@ -101,19 +101,26 @@ class Recommender:
 
         return predictions
 
-    def train(self, user=None):
-        logger.info(f"Training recommender for user {user.email}")
+    def train(self, user=None, celery_logger=None):
+        if celery_logger:
+            current_logger = celery_logger
+        else:
+            current_logger = logger
+        current_logger.info(
+            f"Training recommender {f'for user {user.email}' if user else ''}"
+        )
         dataset, available_titles = self._load_data(user)
-        logger.info(f"Building full trainset for user {user.email}")
+        current_logger.info(
+            f"Building full trainset {f'for user {user.email}' if user else ''}"
+        )
         trainset = dataset.build_full_trainset()
         algo = surprise.SVD()
-        logger.info(f"Fitting SVD for user {user.email}")
+        current_logger.info(f"Fitting SVD {f'for user {user.email}' if user else ''}")
         algo.fit(trainset)
 
         return algo, available_titles
 
     def _load_data(self, user=None):
-        logger.info("Loading available UserRating")
         dataframe = pd.DataFrame(
             list(
                 UserRating.objects.filter(
@@ -121,7 +128,6 @@ class Recommender:
                 ).values()
             )
         )
-        logger.info("Creating surprise Dataset")
         dataset = Dataset.load_from_df(
             dataframe[["user_id", "title_id", "rating"]],
             Reader(rating_scale=(1, 10)),

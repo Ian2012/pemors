@@ -339,3 +339,6 @@ SPECTACULAR_SETTINGS = {
 SYNTETHIC_USER_PATTERN = "SyntethicUser"
 
 RECOMMENDER_CACHE_KEY = "updated_recommender"
+
+CELERY_BROKER_URL = env("REDIS_URL", default="redis://pemors_local_redis:6379")
+CELERY_RESULT_BACKEND = env("REDIS_URL", default="redis://pemors_local_redis:6379")
