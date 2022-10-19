@@ -19,7 +19,7 @@ export function RecommenderTitle({title}) {
     useEffect(() => fetchData())
 
     return <div key={title.id} className="mt-8">
-        <a href={"/title" + title.id}>
+        <a href={"/titles/" + title.id}>
             <img id="{{ values.title.id }}"
                  src={poster && poster}
                  alt="poster"
