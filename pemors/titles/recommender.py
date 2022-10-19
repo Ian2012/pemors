@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.cache import cache
 from surprise import Dataset, Reader
 
-from pemors.titles.models import Title, UserRating
+from pemors.titles.models import HistoricalRecommender, Title, UserRating
 from pemors.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -72,8 +72,12 @@ class Recommender:
 
         return recommendations
 
-    def _load_recommender(self, user):
-        logger.info("Verify model is trained for user")
+    def load_recommender(self, user=None, force=False, celery_logger=None):
+        if celery_logger:
+            current_logger = celery_logger
+        else:
+            current_logger = logger
+        current_logger.info("Verify model is trained for user")
 
         cache_results = cache.get_many(
             [settings.RECOMMENDER_CACHE_KEY, AVAILABLE_TITLES_CACHE_KEY]
@@ -81,13 +85,14 @@ class Recommender:
         algo = cache_results.get(settings.RECOMMENDER_CACHE_KEY)
         available_titles = cache_results.get(AVAILABLE_TITLES_CACHE_KEY)
 
-        if not algo:
-            algo, available_titles = self.train(user)
+        if force or not algo:
+            algo, available_titles = self.train(user, logger)
             cache.set(
                 settings.RECOMMENDER_CACHE_KEY,
                 algo,
             )
             cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)
+            HistoricalRecommender.objects.create()
 
         if not available_titles:
             available_titles = self._load_available_titles()
@@ -95,7 +100,7 @@ class Recommender:
         return algo, available_titles
 
     def calculate_prediction(self, user):
-        algo, available_titles = self._load_recommender(user)
+        algo, available_titles = self.load_recommender(user)
         logger.info(f"Predicting movies for user {user.email}")
         predictions = (algo.predict(user.id, title.id) for title in available_titles)
 

@@ -5,6 +5,7 @@ from .models import (
     Aka,
     Crew,
     Genre,
+    HistoricalRecommender,
     KnownFor,
     Person,
     Rating,
@@ -68,3 +69,8 @@ class CrewAdmin(admin.ModelAdmin):
 @admin.register(UserRating)
 class UserRatingAdmin(admin.ModelAdmin):
     list_display = ["rating", "user", "title"]
+
+
+@admin.register(HistoricalRecommender)
+class HistoricalRecommenderAdmin(admin.ModelAdmin):
+    list_display = ["id", "created"]

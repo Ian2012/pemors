@@ -8,4 +8,4 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def train_recommender():
-    Recommender().train(celery_logger=logger)
+    Recommender().load_recommender(celery_logger=logger, force=True)
