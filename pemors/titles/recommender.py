@@ -152,8 +152,14 @@ class Recommender:
         algo, available_titles = self.load_recommender(train_recommender)
 
         self.logger.info(f"Predicting movies for user {user.email}")
-        predictions = (algo.predict(user.id, title.id) for title in available_titles)
-
+        ratings = UserRating.objects.filter(user=user).values_list(
+            "title_id", flat=True
+        )
+        predictions = (
+            algo.predict(user.id, title.id)
+            for title in available_titles
+            if title.id not in ratings
+        )
         recommendations = [
             {"title": iid, "rating": Decimal(est)}
             for uid, iid, true_r, est, _ in predictions
