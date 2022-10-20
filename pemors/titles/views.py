@@ -40,7 +40,7 @@ class ColdStart(LoginRequiredMixin, TemplateView):
         title_counter = (
             UserRating.objects.values("title_id")
             .annotate(total=Count("title_id"))
-            .filter(total__gte=300)
+            .filter(total__gte=200)
             .values("title_id", "total")
         )
         title_counter = sorted(title_counter, key=lambda d: d["total"], reverse=True)
