@@ -47,15 +47,7 @@ class Recommender:
     def __init__(self, celery_logger=None):
         self.logger = celery_logger if celery_logger else logger
 
-    def recommend(
-        self, user, page=1, page_size=30, use_genre_preferences=True, force=False
-    ):
-        recommendations = self.generate_recommendations_for_user(
-            user, force, calculate_recommendations=False
-        )
-
-        i, j = page * page_size, (page + 1) * page_size
-        recommendations = recommendations[i:j]
+    def assign_titles(self, recommendations):
         titles_id = (recommendation["title"] for recommendation in recommendations)
 
         titles = list(
@@ -70,8 +62,15 @@ class Recommender:
         for i, recommendation in enumerate(recommendations):
             recommendations[i]["title"] = titles[recommendation["title"]]
 
-        if use_genre_preferences:
-            return self.sort_recommendations_by_genre_preferences(recommendations, user)
+        return recommendations
+
+    def recommend(self, user, page=1, page_size=30, force=False):
+        recommendations = self.generate_recommendations_for_user(
+            user, force, calculate_recommendations=False
+        )
+
+        i, j = page * page_size, (page + 1) * page_size
+        recommendations = recommendations[i:j]
 
         return recommendations
 
@@ -94,9 +93,9 @@ class Recommender:
 
         self.logger.info("Building full trainset")
         trainset = dataset.build_full_trainset()
-        algo = surprise.SVD()
+        algo = surprise.KNNBaseline()
 
-        self.logger.info("Fitting SVD")
+        self.logger.info("Fitting algorithm")
         algo.fit(trainset)
 
         return algo, available_titles
@@ -112,11 +111,12 @@ class Recommender:
 
         if train_recommender or not algo:
             algo, available_titles = self.train()
-            self.logger.info("Saving algorithm and titles in cache")
+            self.logger.info("Saving algorithm in cache")
             cache.set(
                 settings.RECOMMENDER_CACHE_KEY,
                 algo,
             )
+            self.logger.info("Saving available titles in cache")
             cache.set(AVAILABLE_TITLES_CACHE_KEY, available_titles)
             User.objects.update(is_updated=False)
             HistoricalRecommender.objects.create()
@@ -164,8 +164,10 @@ class Recommender:
             {"title": iid, "rating": Decimal(est)}
             for uid, iid, true_r, est, _ in predictions
         ]
-        recommendations = sorted(recommendations, key=lambda d: d["rating"])
-
+        recommendations = self.assign_titles(recommendations)
+        recommendations = self.sort_recommendations_by_genre_preferences(
+            recommendations, user
+        )
         self.logger.info(f"Saving recommendations for user {user.email} in cache")
         cache.set(RECOMMENDATION_CACHE_FORMAT.format(user.id), recommendations)
         return recommendations
@@ -183,7 +185,7 @@ class Recommender:
                 abs(user_trait - Decimal(genre_trait))
                 for user_trait, genre_trait in zip(user_profile, values)
             )
-            user_genre_preferences[genre] = 10 - distance
+            user_genre_preferences[genre] = 10 - distance * 2
 
         for i, recommendation in enumerate(recommendations):
             recommendations[i]["genres"] = [
@@ -202,11 +204,15 @@ class Recommender:
                     counter += 1
             if counter != 0:
                 recommendations[i]["predicted_rating"] = (
-                    recommendation["rating"] / 2 + most_valuable_genre_value / counter
+                    recommendation["rating"] / 2
+                    + (most_valuable_genre_value / counter) / 2
                 )
             else:
                 recommendations[i]["predicted_rating"] = recommendation["rating"]
 
-            # TODO Resolver esto
         recommendations.sort(key=lambda x: x["predicted_rating"], reverse=True)
+        recommendations = [
+            {"title": recommendation["title"].id, "rating": recommendation["rating"]}
+            for recommendation in recommendations
+        ]
         return recommendations

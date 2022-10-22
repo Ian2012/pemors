@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from pemors.titles.api.serializers import TitleSerializer, UserRatingSerializer
-from pemors.titles.models import UserRating, UserTasks
+from pemors.titles.models import Title, UserRating, UserTasks
 from pemors.titles.recommender import Recommender
 
 logger = logging.getLogger(__name__)
@@ -29,11 +29,12 @@ class RecommendationView(APIView):
             user=request.user,
             page=int(request.GET.get("page")) if request.GET.get("page") else 0,
             page_size=self.PAGE_SIZE,
-            use_genre_preferences=True,
         )
 
         movie_data = TitleSerializer(
-            [recommendation["title"] for recommendation in recommendations],
+            Title.objects.filter(
+                id__in=[recommendation["title"] for recommendation in recommendations]
+            ),
             many=True,
         )
 
