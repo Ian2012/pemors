@@ -2,7 +2,6 @@ import logging
 from decimal import Decimal
 
 import pandas as pd
-import surprise
 from django.conf import settings
 from django.core.cache import cache
 from surprise import Dataset, Reader
@@ -44,10 +43,14 @@ class Recommender:
     dataframe = None
     dataset = None
 
-    def __init__(self, celery_logger=None):
+    def __init__(self, celery_logger=None, algo=None):
         self.logger = celery_logger if celery_logger else logger
+        if not algo:
+            raise Exception("You need to set the algorithm")
+        self.algo = algo
 
     def assign_titles(self, recommendations):
+        self.logger.info("Loading titles")
         titles_id = (recommendation["title"] for recommendation in recommendations)
 
         titles = list(
@@ -75,7 +78,6 @@ class Recommender:
         return recommendations
 
     def train(self):
-        self.logger.info("Training recommender")
         dataframe = pd.DataFrame(
             list(
                 UserRating.objects.filter(
@@ -93,9 +95,9 @@ class Recommender:
 
         self.logger.info("Building full trainset")
         trainset = dataset.build_full_trainset()
-        algo = surprise.SVD()
+        algo = self.algo()
 
-        self.logger.info("Fitting algorithm")
+        self.logger.info(f"Fitting algorithm {str(algo)}")
         algo.fit(trainset)
 
         return algo, available_titles

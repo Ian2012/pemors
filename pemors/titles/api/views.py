@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from surprise import BaselineOnly
 
 from pemors.titles.api.serializers import TitleSerializer, UserRatingSerializer
 from pemors.titles.models import Title, UserRating, UserTasks
@@ -19,7 +20,7 @@ class UserRatingViewSet(viewsets.ModelViewSet):
 
 class RecommendationView(APIView):
     permission_classes = []
-    movie_recommender = Recommender()
+    movie_recommender = Recommender(algo=BaselineOnly)
     PAGE_SIZE = 30
 
     def get(self, request):
