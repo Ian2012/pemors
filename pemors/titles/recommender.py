@@ -93,7 +93,7 @@ class Recommender:
 
         self.logger.info("Building full trainset")
         trainset = dataset.build_full_trainset()
-        algo = surprise.KNNBaseline()
+        algo = surprise.SVD()
 
         self.logger.info("Fitting algorithm")
         algo.fit(trainset)
