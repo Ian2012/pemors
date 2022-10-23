@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Rating} from "./Rating.jsx";
+import Rating from "../Coldstart/Rating.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
 
-export function RatingTitle({movie, callback}) {
-
+export default function RatingTitle({data, callback}) {
+    const [movie, setMovie] = useState(data ? data: JSON.parse(document.getElementById('movie').textContent))
     const [poster, setPoster] = useState('')
     const fetchData = () => {
+        console.log("detchind")
         fetch(`https://www.omdbapi.com/?i=${movie.id}&apikey=6aad63ad`)
             .then(response => {
                 return response.json()
@@ -19,20 +20,19 @@ export function RatingTitle({movie, callback}) {
                 movie.votes = data["imdbVotes"] === "N/A" ? 0 : data["imdbVotes"]
             })
     }
-    useEffect(() => fetchData())
+    useEffect(() => {
+        fetchData()
+    })
 
     return <section className="text-gray-100 body-font overflow-hidden">
         <div className="container px-5 py-6 mx-auto">
             <div className="lg:w-4/5 mx-auto flex flex-wrap justify-center">
                 {poster ? <img alt="ecommerce"
                                className="min-h-[32rem] lg:w-1/2 max-h-[550px] lg:h-auto h-64 object-contain object-center rounded"
-                               src={poster}></img>
-                    :
-                    <div
-                        className="mt-16 flex min-h-[32rem] lg:w-1/2 max-h-[550px] lg:h-auto h-64 object-contain object-center rounded">
-                        <ClipLoader color={'#fff'} className="mx-auto my-auto" size={150}/>
-                    </div>
-                }
+                               src={poster}></img> : <div
+                    className="mt-16 flex min-h-[32rem] lg:w-1/2 max-h-[550px] lg:h-auto h-64 object-contain object-center rounded">
+                    <ClipLoader color={'#fff'} className="mx-auto my-auto" size={150}/>
+                </div>}
                 <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                     <h1 className="text-3xl title-font font-medium mb-1">{movie.primary_title}</h1>
                     <div className="flex mb-4">

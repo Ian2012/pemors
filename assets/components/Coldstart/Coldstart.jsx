@@ -1,5 +1,5 @@
 import {Transition} from "react-transition-group";
-import {RatingTitle} from "./RatingTitle.jsx";
+import RatingTitle from "./RatingTitle.jsx";
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -34,7 +34,7 @@ export default function Coldstart() {
     const [showLoading, changeShowLoading] = useState(false)
     const [leftMovies, changeLeftMovies] = useState(needed_movies - rating_counter)
 
-    const getStatus= () => {
+    const getStatus = () => {
         fetch('/api/titles/progress', {
             method: "GET", headers: {
                 "Content-type": "application/json;charset=UTF-8", "X-CSRFToken": csrftoken
@@ -73,7 +73,7 @@ export default function Coldstart() {
                             changeShow(true)
                             return null
                         }
-                        return <RatingTitle movie={movies[prevState + 1]} callback={onClick}/>
+                        return <RatingTitle data={movies[prevState + 1]} callback={onClick}/>
                     })
                 }, 300)
                 return prevState + 1
@@ -105,7 +105,7 @@ export default function Coldstart() {
     };
 
 
-    const [title, changeTitle] = useState(<RatingTitle movie={movies[currentMovieIndex]} callback={onClick}/>);
+    const [title, changeTitle] = useState(<RatingTitle data={movies[currentMovieIndex]} callback={onClick}/>);
     const error = <h1 className="text-center text-3xl text-danger text-white">
         Ups! Algo salió mal. No eres tú, soy yo.
     </h1>

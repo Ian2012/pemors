@@ -1,7 +1,7 @@
 import ReactStars from "react-rating-stars-component";
 import React from 'react';
 
-export function Rating({movie, callback}) {
+export default function Rating({movie, callback}) {
 
     const ratingChanged = (rating) => {
         fetch('/api/titles/user_rating/', {
@@ -16,7 +16,9 @@ export function Rating({movie, callback}) {
             .then(response => response.json())
             .then(json => {
                 console.log(json)
-                callback()
+                if (callback !== undefined){
+                    callback()
+                }
             })
     };
 

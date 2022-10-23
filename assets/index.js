@@ -3,19 +3,24 @@ import {createRoot} from "react-dom/client";
 
 
 const Coldstart = lazy(() => import ("./components/Coldstart/Coldstart.jsx"))
+const RatingTitle = lazy(() => import ("./components/Coldstart/RatingTitle.jsx"))
 const Recommender = lazy(() => import ("./components/Recommender/Recommender.jsx"))
 
 const elements = [
     document.getElementById("coldstart"),
     document.getElementById("movie_recommendation"),
+    document.getElementById("title_detail"),
 ]
 
 const apps = [
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
         <Coldstart/>
     </Suspense>,
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
         <Recommender/>
+    </Suspense>,
+    <Suspense fallback={<div></div>}>
+        <RatingTitle/>
     </Suspense>,
 ]
 

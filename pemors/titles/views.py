@@ -17,16 +17,20 @@ from pemors.titles.tasks import recalculate_recommendations_for_user_task
 logger = logging.getLogger(__name__)
 
 
-@method_decorator(cache_page(60 * 24), name="dispatch")
+@method_decorator(cache_page(0), name="dispatch")
 class TitleDetailView(LoginRequiredMixin, DetailView):
     model = Title
     slug_field = "id"
     slug_url_kwarg = "id"
+    context_object_name = "title"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         _filter = {"user": self.request.user, "title": context_data["title"]}
         context_data["rating"] = UserRating.objects.filter(**_filter).first()
+        context_data["title_data"] = TitleSerializer(
+            instance=context_data["title"]
+        ).data
         return context_data
 
 
