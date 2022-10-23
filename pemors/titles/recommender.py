@@ -170,6 +170,7 @@ class Recommender:
         recommendations = self.sort_recommendations_by_genre_preferences(
             recommendations, user
         )
+        recommendations = recommendations[0:1000]
         self.logger.info(f"Saving recommendations for user {user.email} in cache")
         cache.set(RECOMMENDATION_CACHE_FORMAT.format(user.id), recommendations)
         return recommendations
