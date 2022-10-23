@@ -35,13 +35,6 @@ class Predictor:
 
         return predictions
 
-    def predict_personality(self, statuses):
-        predictions = {}
-        for status in statuses:
-            predictions[status.value] = self.predict_status([status.value])
-
-        return predictions
-
     def accuracy(self, x_test, y_test):
         logger.debug("Accuracy")
         for trait in TRAITS:

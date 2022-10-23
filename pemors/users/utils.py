@@ -13,13 +13,14 @@ def predict_personality_for_user(user):
         get_user_tweets(user)
 
     logger.info(f"Predicting personality for user {user.email}")
-    predictions = predictor.predict_personality(statuses=user.statuses.all())
+    prediction = predictor.predict_status(
+        x=[status.value for status in user.statuses.all()]
+    )
     total = {trait: 0 for trait in TRAITS}
-    n = len(predictions)
-    for key, traits in predictions.items():
-        for trait in traits:
-            total[trait["trait"]] += trait["pred_s"]
-    total = {trait: value / n for trait, value in total.items()}
+
+    for trait in prediction:
+        total[trait["trait"]] = trait["pred_s"]
+
     user.profile.agr = total["AGR"]
     user.profile.con = total["CON"]
     user.profile.ext = total["EXT"]
