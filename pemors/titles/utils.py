@@ -2,9 +2,9 @@ import csv
 import subprocess
 import sys
 
+import surprise
 from django.conf import settings
 from django.db import transaction
-from surprise import BaselineOnly
 from tqdm import tqdm
 
 from pemors.titles.models import (
@@ -405,7 +405,7 @@ def generate_username(user_id):
 
 def train_for_user(user_id, celery_logger=None, train_recommender=True):
     user = User.objects.get(id=user_id)
-    recommender = Recommender(celery_logger, algo=BaselineOnly)
+    recommender = Recommender(celery_logger, algo=surprise.SVD)
     recommender.generate_recommendations_for_user(
         user=user, train_recommender=train_recommender, calculate_recommendations=True
     )
