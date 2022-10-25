@@ -331,3 +331,4 @@ pemors/media/
 .envs/*
 !.envs/.local/
 ml/data/movie_tweeting/
+ml/training/
