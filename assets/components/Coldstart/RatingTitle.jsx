@@ -3,21 +3,22 @@ import Rating from "../Coldstart/Rating.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export default function RatingTitle({data, callback}) {
-    const [movie, setMovie] = useState(data ? data: JSON.parse(document.getElementById('movie').textContent))
+    const [movie, setMovie] = useState(data ? data : JSON.parse(document.getElementById('movie').textContent))
     const [poster, setPoster] = useState('')
     const fetchData = () => {
-        console.log("detchind")
         fetch(`https://www.omdbapi.com/?i=${movie.id}&apikey=87a06c88`)
             .then(response => {
                 return response.json()
             })
-            .then(data => {
-                console.log("OMDB: ", data)
-                setPoster(data['Poster'] === "N/A" ? "https://cdn-icons-png.flaticon.com/512/103/103085.png" : data['Poster'])
-                movie.omdb = data
-                movie.rating = data["imdbRating"] === "N/A" ? 0 : data["imdbRating"]
-                movie.votes = data["imdbVotes"] === "N/A" ? 0 : data["imdbVotes"]
-                movie.votes = data["imdbVotes"] === "N/A" ? 0 : data["imdbVotes"]
+            .then(apiData => {
+                setPoster(apiData['Poster'] === "N/A" ? "https://cdn-icons-png.flaticon.com/512/103/103085.png" : apiData['Poster'])
+                setMovie((prevMovie) => {
+                    data.omdb = apiData
+                    data.rating = apiData["imdbRating"] === "N/A" ? 0 : apiData["imdbRating"]
+                    data.votes = apiData["imdbVotes"] === "N/A" ? 0 : apiData["imdbVotes"]
+                    console.log("Prev",prevMovie)
+                    return data
+                })
             })
     }
     useEffect(() => {
@@ -49,6 +50,12 @@ export default function RatingTitle({data, callback}) {
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            {movie.omdb && movie.omdb.Title}
+        </div>
+        <div>
+            {data.id}
         </div>
     </section>
 }
