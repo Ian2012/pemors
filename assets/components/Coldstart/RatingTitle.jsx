@@ -7,7 +7,7 @@ export default function RatingTitle({data, callback}) {
     const [poster, setPoster] = useState('')
     const fetchData = () => {
         console.log("detchind")
-        fetch(`https://www.omdbapi.com/?i=${movie.id}&apikey=6aad63ad`)
+        fetch(`https://www.omdbapi.com/?i=${movie.id}&apikey=87a06c88`)
             .then(response => {
                 return response.json()
             })

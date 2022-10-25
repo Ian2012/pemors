@@ -1,14 +1,16 @@
 import logging
 
 import surprise
+from django.core.cache import cache
 from django.http import JsonResponse
 from rest_framework import viewsets
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from pemors.titles.api.serializers import TitleSerializer, UserRatingSerializer
 from pemors.titles.models import Title, UserRating, UserTasks
-from pemors.titles.recommender import Recommender
+from pemors.titles.recommender import RECOMMENDATION_CACHE_FORMAT, Recommender
 
 logger = logging.getLogger(__name__)
 
@@ -24,24 +26,14 @@ class RecommendationView(APIView):
     PAGE_SIZE = 30
 
     def get(self, request):
-        logger.info(f"Loading recommendations for user {request.user.email}")
-
-        recommendations = self.movie_recommender.recommend(
-            user=request.user,
-            page=int(request.GET.get("page")) if request.GET.get("page") else 0,
-            page_size=self.PAGE_SIZE,
-        )
-
-        movie_data = TitleSerializer(
-            Title.objects.filter(
-                id__in=[recommendation["title"] for recommendation in recommendations]
-            ),
-            many=True,
-        )
-
+        page = request.GET.get("page")
+        page = int(page) if page else 0
+        i = page * self.PAGE_SIZE
+        j = (page + 1) * self.PAGE_SIZE
         data = {
-            "movies": movie_data.data,
-            "page_size": self.PAGE_SIZE,
+            "movies": cache.get(RECOMMENDATION_CACHE_FORMAT.format(request.user.id))[
+                i:j
+            ],
         }
         return JsonResponse(status=200, data=data)
 
@@ -63,3 +55,11 @@ class ProgressAPI(APIView):
 
 
 progress_view = ProgressAPI.as_view()
+
+
+class TitleAPIView(RetrieveAPIView):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+
+
+title_view = TitleAPIView.as_view()

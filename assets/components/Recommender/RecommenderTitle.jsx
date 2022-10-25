@@ -3,12 +3,11 @@ import React, {useEffect, useState} from 'react';
 export function RecommenderTitle({title}) {
     const [poster, setPoster] = useState('')
     const fetchData = () => {
-        fetch(`https://www.omdbapi.com/?i=${title.id}&apikey=6aad63ad`)
+        fetch(`https://www.omdbapi.com/?i=${title.title}&apikey=87a06c88`)
             .then(response => {
                 return response.json()
             })
             .then(data => {
-                console.log("OMDB: ", data)
                 setPoster(data['Poster'] === "N/A" ? "https://cdn-icons-png.flaticon.com/512/103/103085.png" : data['Poster'])
                 title.omdb = data
                 title.rating = data["imdbRating"] === "N/A" ? 0 : data["imdbRating"]
@@ -27,7 +26,7 @@ export function RecommenderTitle({title}) {
         </a>
         <div className="mt-2">
             <a href="assets/components/Recommender/RecommenderTitle"
-               className="text-lg mt-2 hover:text-gray-300">{title.primary_title}</a>
+               className="text-lg mt-2 hover:text-gray-300"></a>
             <div className="flex items-center text-gray-400 text-sm mt-1">
                 <svg className="fill-current text-orange-500 w-4" viewBox="0 0 24 24">
                     <g data-name="Layer 2">

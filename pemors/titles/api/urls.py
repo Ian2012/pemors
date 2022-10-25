@@ -5,6 +5,7 @@ from pemors.titles.api.views import (
     UserRatingViewSet,
     progress_view,
     recommendation_view,
+    title_view,
 )
 
 router = DefaultRouter()
@@ -13,5 +14,6 @@ urlpatterns = [
     path("", include(router.urls)),
     path("recommend", recommendation_view, name="recommend"),
     path("progress", progress_view, name="progress"),
+    path("<str:pk>", title_view, name="title_detail"),
 ]
 app_name = "titles_api"
