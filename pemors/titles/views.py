@@ -41,10 +41,10 @@ class ColdStart(LoginRequiredMixin, TemplateView):
         context_data = super().get_context_data(**kwargs)
         logger.info(f"Generating most rated movie list for user {self.request.user}")
 
-        title_counter = (
+        title_counter = list(
             UserRating.objects.values("title_id")
             .annotate(total=Count("title_id"))
-            .filter(total__gte=500)
+            .filter(total__gte=100)
             .values("title_id", "total")
         )
         title_counter = sorted(title_counter, key=lambda d: d["total"], reverse=True)
@@ -56,12 +56,11 @@ class ColdStart(LoginRequiredMixin, TemplateView):
             for title in title_counter
             if title["title_id"] not in ratings
         ]
-        titles = random.choices(titles, k=100)
+        titles = random.choices(titles, k=200)
         random_items = Title.objects.filter(id__in=titles).select_related("rating")
-
         context_data["movies"] = TitleSerializer(random_items, many=True).data
+        random.shuffle(context_data["movies"])
         context_data["needed_movies"] = settings.NEEDED_MOVIES
-
         return context_data
 
     def dispatch(self, *args, **kwargs):
