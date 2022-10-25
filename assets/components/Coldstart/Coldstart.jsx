@@ -43,7 +43,7 @@ export default function Coldstart() {
             .then(response => response.json())
             .then(json => {
                 if (json["status"] === "SUCCESS") {
-                    window.location.pathname = "/"
+                    window.location.pathname = "/users/me"
                 } else {
                     setTimeout(() => {
                         getStatus()
