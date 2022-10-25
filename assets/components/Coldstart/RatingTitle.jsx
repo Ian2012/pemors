@@ -50,11 +50,5 @@ export default function RatingTitle({data, callback}) {
                 </div>
             </div>
         </div>
-        <div>
-            {movie.omdb && movie.omdb.Title}
-        </div>
-        <div>
-            {data.id}
-        </div>
     </section>
 }
