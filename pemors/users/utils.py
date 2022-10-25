@@ -1,6 +1,6 @@
 import logging
 
-from pemors.users.ml.predict import TRAITS, Predictor
+from pemors.users.ml.predict import Predictor
 from pemors.utils.twiteer import get_user_tweets
 
 predictor = Predictor()
@@ -16,11 +16,10 @@ def predict_personality_for_user(user):
     prediction = predictor.predict_status(
         x=[status.value for status in user.statuses.all()]
     )
-    total = {trait: 0 for trait in TRAITS}
-
+    total = {}
     for trait in prediction:
         total[trait["trait"]] = trait["pred_s"]
-
+    logger.info(f"Personality for user {user.email}: {total}")
     user.profile.agr = total["AGR"]
     user.profile.con = total["CON"]
     user.profile.ext = total["EXT"]
