@@ -15,7 +15,6 @@ export default function Rating({movie, callback}) {
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json)
                 if (callback !== undefined){
                     callback()
                 }

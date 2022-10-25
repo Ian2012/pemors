@@ -16,7 +16,6 @@ export default function RatingTitle({data, callback}) {
                     data.omdb = apiData
                     data.rating = apiData["imdbRating"] === "N/A" ? 0 : apiData["imdbRating"]
                     data.votes = apiData["imdbVotes"] === "N/A" ? 0 : apiData["imdbVotes"]
-                    console.log("Prev",prevMovie)
                     return data
                 })
             })

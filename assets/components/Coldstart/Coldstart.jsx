@@ -42,7 +42,6 @@ export default function Coldstart() {
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json)
                 if (json["status"] === "SUCCESS") {
                     window.location.pathname = "/"
                 } else {
@@ -59,7 +58,6 @@ export default function Coldstart() {
 
     const triggerTraining = () => {
         changeShowLoading(true)
-        console.log("Training")
         getStatus()
 
     }
