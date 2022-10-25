@@ -13,10 +13,16 @@ export default function RatingTitle({data, callback}) {
             .then(apiData => {
                 setPoster(apiData['Poster'] === "N/A" ? "https://cdn-icons-png.flaticon.com/512/103/103085.png" : apiData['Poster'])
                 setMovie((prevMovie) => {
-                    data.omdb = apiData
-                    data.rating = apiData["imdbRating"] === "N/A" ? 0 : apiData["imdbRating"]
-                    data.votes = apiData["imdbVotes"] === "N/A" ? 0 : apiData["imdbVotes"]
-                    return data
+                    if (data){
+                        data.omdb = apiData
+                        data.rating = apiData["imdbRating"] === "N/A" ? 0 : apiData["imdbRating"]
+                        data.votes = apiData["imdbVotes"] === "N/A" ? 0 : apiData["imdbVotes"]
+                        return data
+                    }
+                    prevMovie.omdb = apiData
+                    prevMovie.rating = apiData["imdbRating"] === "N/A" ? 0 : apiData["imdbRating"]
+                    prevMovie.votes = apiData["imdbVotes"] === "N/A" ? 0 : apiData["imdbVotes"]
+                    return prevMovie
                 })
             })
     }
