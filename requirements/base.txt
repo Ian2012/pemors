@@ -28,7 +28,7 @@ django-debug-toolbar==3.6.0  # https://github.com/jazzband/django-debug-toolbar
 drf-spectacular==0.23.1  # https://github.com/tfranzel/drf-spectacular
 psycopg2-binary==2.9.3  # https://github.com/psycopg/psycopg2
 # ML
-scikit-learn==1.1.1
+scikit-learn==1.2.2
 matplotlib==3.5.2
 pandas==1.4.2
 scikit-surprise==1.1.3
